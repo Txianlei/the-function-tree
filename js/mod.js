@@ -7,7 +7,7 @@ let modInfo = {
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal(0), // Used for hard resets and new players
+	initialStartPoints: new Decimal(1), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
@@ -18,6 +18,9 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.1</h3><br>
+		- Added Sacrifice.<br>
+		- Added 10 upgrades.
 	<h3>v0.0</h3><br>
 		- Added function.<br>
 		- Added 5 upgrades.`
@@ -29,7 +32,7 @@ let winText = `Congratulations! You have reached the end and beaten this game, b
 var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
 
 function getStartPoints(){
-    return new Decimal(0)
+    return new Decimal(1)
 }
 
 // Determines if it should show points/sec
@@ -43,9 +46,8 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1.1)
-	if(hasUpgrade("f",21)) gain = new Decimal(2.2)
 	gain=gain.plus(player.f.adder)
-	gain=gain.times(player.f.timer)
+	gain=gain.times(player.f.multiplier)
 	gain=gain.pow(player.f.exp)
 	if(player.f.ftype==0) gain=gain.slog()
 	return gain
