@@ -293,7 +293,7 @@ function loadVue() {
 				if (!this.interval) {
 					this.interval = setInterval((function() {
 						if(this.time >= 5)
-							buyBuyable(this.layer, this.data)
+						 	buyBuyable(this.layer, this.data)
 						this.time = this.time+1
 					}).bind(this), 50)}
 			},

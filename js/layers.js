@@ -10,6 +10,8 @@ addLayer("f", {
         multiplier: new Decimal(1),
         exp: new Decimal(1),
         isSacrifice: false,
+        challengechecker: new Decimal(0),
+        slog21time: 0,
         cfunc: "",
     }},
     color: "#FFFFFF",
@@ -53,21 +55,38 @@ addLayer("f", {
                 "clickables"
             ],
             unlocked(){return tmp.f.clickables[11].unlocked}
+        }, 
+        "Challenges":{
+            content:[
+                "challenges"
+            ],
+            unlocked(){return player.f.challengechecker.gte(1)||hasUpgrade("f",35)}
         }
     },
     update(diff){
         player.f.points=player.points
         player.f.adder=tmp.f.calcadder
         player.f.multiplier=tmp.f.calctimer
-        if(player.f.ftype==0) player.f.cfunc="slog"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.gt(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`)+(player.f.multiplier.gt(1)?"*"+(`${format(player.f.multiplier)}`)+")":""))+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")
+        if(inChallenge("f",21)) player.f.slog21time+=(4*diff)
+        if(inChallenge("f",22)) player.points=player.points.min(5000)
+        if(player.f.ftype==0) player.f.cfunc="slog"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")"+(hasUpgrade("f",42)?"*"+format(upgradeEffect("f",42)):""))
     },
     calcadder(){
         let add=new Decimal(0)
         if(hasUpgrade("f",12)) add=add.plus(0.1)
         if(hasUpgrade("f",14)) add=add.plus(upgradeEffect("f",14))
         if(hasUpgrade("f",22)) add=add.plus(upgradeEffect("f",15).times(2).add(1).pow(1.5))
+        if(hasUpgrade("f",41)) add=add.plus(10)
+        if(hasUpgrade("f",41)) add=add.plus(10)        
+        if(hasUpgrade("f",41)&&hasUpgrade("f",42)) add=add.plus(10)        
+        if(hasUpgrade("f",41)&&hasUpgrade("f",43)) add=add.plus(10)        
+        if(hasUpgrade("f",41)&&hasUpgrade("f",44)) add=add.plus(10)        
+        if(hasUpgrade("f",41)&&hasUpgrade("f",45)) add=add.plus(10)
+        if(hasAchievement("a",15)&&player.f.ftype==0) add=add.plus(1)
+        if(inChallenge("f",21)) add=add.minus(player.f.slog21time).max(0)
         if(hasUpgrade("f",24)) add=add.times(2)
         if(hasUpgrade("f",31)) add=add.times(upgradeEffect("f",31))
+        if(hasUpgrade("f",44)) add=add.times(upgradeEffect("f",44))
         if(hasUpgrade("f",34)) add=add.pow(upgradeEffect("f",34))
         return add
     },
@@ -75,16 +94,22 @@ addLayer("f", {
         let multi=new Decimal(1)
         if(hasUpgrade("f",13)) multi=multi.plus(0.25)
         if(hasUpgrade("f",15)) multi=multi.plus(upgradeEffect("f",15))
+        if(hasChallenge("f",21)) multi=multi.plus(25)
         if(hasUpgrade("f",21)) multi=multi.times(upgradeEffect("f",21))
         if(hasUpgrade("f",25)) multi=multi.times(2)
+        if(hasUpgrade("f",45)) multi=multi.times(upgradeEffect("f",45))
+        if(hasChallenge("f",11)) multi=multi.times(challengeEffect("f",11))
         if(hasUpgrade("f",33)) multi=multi.pow(upgradeEffect("f",33))
+        if(inChallenge("f",11)) multi=multi.sqrt()
         return multi
     },
     calcexponent(){
         let expo=new Decimal(1)
-        if(hasUpgrade("f",32))expo=expo.plus(player.points.plus(1).ln().cbrt().minus(1))//Sacrifice after XII
+        if(hasChallenge("f",12)) expo=expo.plus(player.points.log10().pow(1.15).add(1).ln())//Sacrifice after slog12
+        else if(hasUpgrade("f",32))expo=expo.plus(player.points.plus(1).ln().cbrt().minus(1))//Sacrifice after XII
         else expo=expo.plus(player.points.plus(1).log10().sqrt().minus(1))//Sacrifice when unlocked
-        return expo.max(1)
+        if(inChallenge("f",22)) expo=expo.times(player.points.pow(200).plus(1).ln().pow(player.points.plus(1).slog()).pow(player.f.exp.div(hasUpgrade("f",52) ? 30 : hasUpgrade("f",51) ? 40 : 50)).max(0)).min("1eeeeeeeeeeeeeeeeeeee20")
+        return expo.add(hasAchievement("a",25)&&player.f.ftype==0 ? 1 : 0).max(1)
     },
     upgrades:{
         11:{
@@ -154,7 +179,7 @@ addLayer("f", {
                 return hasUpgrade("f",15)&&player.f.ftype==0
             },
             style:{"color":"rgb(180,0,0)","text-shadow" : "0 0 5px rgb(180,0,0)"},
-            effect(){return player.points.plus(1).slog().pow(7).add(1).log10().add(1).max(1)},
+            effect(){return player.points.plus(1).slog().pow(hasUpgrade("f",43) ? 43 : 7).add(1).log10().add(1).max(1)},
             effectDisplay(){return `x${format(upgradeEffect("f",21))}`},
             canAfford(){return player.points.gte(30)},
             pay(){return player.points=player.points.minus(30)}
@@ -172,7 +197,7 @@ addLayer("f", {
         },
         23:{
             title:"VIII",
-            description(){return player.f.isSacrifice ? "Unlock a new upgrade" : "Unlock sacrifice"},
+            description(){return player.f.isSacrifice ? "Unlock a new upgrade." : "Unlock sacrifice."},
             cost(){return new Decimal(100)},
             unlocked(){ 
                 return hasUpgrade("f",22)&&player.f.ftype==0
@@ -205,14 +230,14 @@ addLayer("f", {
         },
         31:{
             title:"XI",
-            description(){return "Add a number which is based on the factor of x to the adder of x."},
+            description(){return "Multiply the adder of x based on the facor of x."},
             cost(){return new Decimal(90)},
             unlocked(){ 
                 return hasUpgrade("f",25)&&player.f.ftype==0&&player.f.isSacrifice
             },
             style:{"color":"rgb(105,0,0)","text-shadow" : "0 0 5px rgb(105,0,0)"},
             effect(){return player.f.multiplier.plus(10).log10().pow(2).div(0.5).max(1)},
-            effectDisplay(){return `*${format(upgradeEffect("f",31))}`},
+            effectDisplay(){return `x${format(upgradeEffect("f",31))}`},
             canAfford(){return player.points.gte(90)},
             pay(){return player.points=player.points.minus(90)}
         },
@@ -248,14 +273,14 @@ addLayer("f", {
                 return hasUpgrade("f",33)&&player.f.ftype==0&&player.f.isSacrifice
             },
             style:{"color":"rgb(60,0,0)","text-shadow" : "0 0 5px rgb(60,0,0)"},
-            effect(){return player.f.exp.div(0.5).sqrt().max(1)},
+            effect(){return inChallenge("f",12) ? new Decimal(1):player.f.exp.div(0.5).sqrt().max(1)},
             effectDisplay(){return `^${format(upgradeEffect("f",34))}`},
             canAfford(){return player.points.gte(175)},
             pay(){return player.points=player.points.minus(175)}
         },
         35:{
             title:"XV",
-            description(){return "Unlock challenge."},
+            description(){return "Unlock challenges."},
             cost(){return new Decimal(200)},
             unlocked(){ 
                 return hasUpgrade("f",34)&&player.f.ftype==0&&player.f.isSacrifice
@@ -264,11 +289,96 @@ addLayer("f", {
             canAfford(){return player.points.gte(200)},
             pay(){return player.points=player.points.minus(200)}
         },
+        41:{
+            title:"XVI",
+            description(){return "Each upgrade in this row you've bought adds 10 to the base adder of x."},
+            cost(){return new Decimal(125)},
+            unlocked(){ 
+                return hasChallenge("f",12)&&player.f.ftype==0
+            },
+            style:{"color":"rgb(255,0,0)","text-shadow" : "0 0 5px rgb(255,0,0)"},
+            canAfford(){return player.points.gte(125)},
+            pay(){return player.points=player.points.minus(125)}
+        },
+        42:{
+            title:"XVII",
+            description(){return "Points can grow their gain after slog."},
+            cost(){return new Decimal(145)},
+            unlocked(){ 
+                return hasUpgrade("f",41)&&player.f.ftype==0
+            },
+            style:{"color":"rgb(255,0,0)","text-shadow" : "0 0 5px rgb(255,0,0)"},
+            canAfford(){return player.points.gte(145)},
+            pay(){return player.points=player.points.minus(145)},
+            effect(){return player.points.add(1).pow(10).log10().cbrt().max(1)},
+            effectDisplay(){return `x${format(upgradeEffect("f",42))}`},
+        },
+        43:{
+            title:"XVIII",
+            description(){return "Upgrade VI's effect is stronger."},
+            cost(){return new Decimal(250)},
+            unlocked(){ 
+                return hasUpgrade("f",42)&&player.f.ftype==0
+            },
+            style:{"color":"rgb(255,0,0)","text-shadow" : "0 0 5px rgb(255,0,0)"},
+            canAfford(){return player.points.gte(250)},
+            pay(){return player.points=player.points.minus(250)},
+        },
+        44:{
+            title:"XIX",
+            description(){return "The adder of x boosts itself."},
+            cost(){return new Decimal(340)},
+            unlocked(){ 
+                return hasUpgrade("f",43)&&player.f.ftype==0
+            },
+            style:{"color":"rgb(255,0,0)","text-shadow" : "0 0 5px rgb(255,0,0)"},
+            canAfford(){return player.points.gte(340)},
+            pay(){return player.points=player.points.minus(250)},
+            effect(){return new Decimal(player.f.adder.log10()).pow(player.f.adder.add(1).slog()).div(3).max(1)},
+            effectDisplay(){return `x${format(upgradeEffect("f",44))}`},
+        },
+        45:{
+            title:"XX",
+            description(){return "The factor of x boosts itself, unlock a new challenge."},
+            cost(){return new Decimal(500)},
+            unlocked(){ 
+                return hasUpgrade("f",44)&&player.f.ftype==0
+            },
+            style:{"color":"rgb(255,0,0)","text-shadow" : "0 0 5px rgb(255,0,0)"},
+            canAfford(){return player.points.gte(500)},
+            pay(){return player.points=player.points.minus(500)},
+            effect(){return new Decimal(player.f.multiplier.ln()).pow(player.f.multiplier.add(1).slog()).div(5).max(1)},
+            effectDisplay(){return `x${format(upgradeEffect("f",45))}`},
+        },
+        51:{
+            title:"XXI",
+            description(){return "Sacrifice exp-divider is 40 instead of 50."},
+            cost(){return new Decimal(700)},
+            unlocked(){ 
+                return inChallenge("f",22)&&player.f.ftype==0&&player.f.exp.gte(5)
+            },
+            style:{"color":"rgb(255,0,0)","text-shadow" : "0 0 5px rgb(255,0,0)"},
+            canAfford(){return player.points.gte(700)},
+            pay(){return player.points=player.points.minus(700)},
+        },
+        52:{
+            title:"XXII",
+            description(){return "Sacrifice exp-divider is 30 instead of 40."},
+            cost(){return new Decimal(800)},
+            unlocked(){ 
+                return inChallenge("f",22)&&player.f.ftype==0&&player.f.exp.gte(12.5)
+            },
+            style:{"color":"rgb(255,0,0)","text-shadow" : "0 0 5px rgb(255,0,0)"},
+            canAfford(){return player.points.gte(800)},
+            pay(){return player.points=player.points.minus(800)},
+        },
     },
     clickables:{
         11:{
             title(){return "Sacrifice your function"},
-            display(){return `Sacrifice all the points and upgrades to give this function an exponent.
+            display(){return player.f.exp.gt(tmp.f.calcexponent) ? `Maybe not now..... but it's still clickable!
+                currently:+^${format(tmp.f.calcexponent.minus(player.f.exp).max(0))}
+                total boost:+^${format(player.f.exp.minus(1))}`:`Sacrifice all the points and upgrades to give this function an exponent.
                              currently:+^${format(tmp.f.calcexponent.minus(player.f.exp).max(0))}
                              total boost:+^${format(player.f.exp.minus(1))}`},
             style:{"height":"200px","width":"200px","background-color":"#00000000","border-radius":"0%","border-color":"red","color":"red","text-shadow":"0 0 15px red","font-size":"15px"},
@@ -281,5 +391,167 @@ addLayer("f", {
             },
             canClick(){return hasUpgrade("f",23)||player.f.isSacrifice}
         },
+    },
+    challenges:{
+        11:{
+            name:"slog 11",
+            challengeDescription:"The factor of x is square-rooted.",
+            unlocked(){return hasChallenge("f",11)},
+            goalDescription(){return "145 points"},
+            style:{"border-radius":"2%","border-color":"rgb(255,0,0)","color":"red","font-size":"18px","text-shadow":"0 0 15px red"},
+            rewardDescription:"Upgrade XIV grows the factor of x with a multiplier.",
+            canComplete(){return player.points.gte(145)},
+            marked(){return hasUpgrade("f",35)||player.f.challengechecker.gte(1)},
+            onEnter(){
+                player.f.challengechecker=player.f.challengechecker.plus(1)
+                player.points=new Decimal(0)
+            },
+            rewardEffect(){return hasChallenge("f",11) ? upgradeEffect("f",34).pow(20.24).log10().max(1) : new Decimal(1)},
+            rewardDisplay(){return `x${format(this.rewardEffect())}`}
+        },
+        12:{
+            name:"slog 12",
+            challengeDescription:"Run 'slog 11' and upgrade XIV is disabled.",
+            unlocked(){return hasChallenge("f",11)},
+            goalDescription(){return "55 points"},
+            style:{"border-radius":"2%","border-color":"rgb(255,0,0)","color":"red","font-size":"18px","text-shadow":"0 0 15px red"},
+            rewardDescription:"Sacrifice formula is better and unlock a new upgrade.",
+            canComplete(){return player.points.gte(55)},
+            marked(){return hasChallenge("f",12)},
+            onEnter(){
+                player.points=new Decimal(0)
+            },
+            countsAs:[11]
+        },
+        21:{
+            name:"slog 21",
+            challengeDescription:"Decrease the base adder of x by 4 per second.",
+            unlocked(){return hasUpgrade("f",45)||player.f.challengechecker.gte(2)},
+            goalDescription(){return "400 points"},
+            style:{"border-radius":"2%","border-color":"rgb(255,0,0)","color":"red","font-size":"18px","text-shadow":"0 0 15px red"},
+            rewardDescription:"Add 25 to the base multiplier of x.",
+            canComplete(){return player.points.gte(400)},
+            marked(){return hasChallenge("f",21)},
+            onEnter(){
+                player.f.challengechecker=player.f.challengechecker.plus(1)
+                player.points=new Decimal(0)
+                player.f.slog21time=0
+            },
+        },
+        22:{
+            name:"slog final",
+            challengeDescription:"Run 'slog 12',sacrifice formula is extremly stronger(Entering this will reset your exponent and do a sacrifice without bonus).",
+            unlocked(){return hasChallenge("f",21)},
+            goalDescription(){return "5000 points(Most points you can get in this challenge)"},
+            style:{"border-radius":"2%","border-color":"rgb(255,0,0)","background":"radial-gradient(red,orange,yellow,green,cyan,purple)","color":"rgb(0,0,0)","font-size":"18px","text-shadow":"0 0 15px white"},
+            rewardDescription:"You can upgrade your function",
+            canComplete(){return player.points.gte(5000)},
+            marked(){return hasChallenge("f",22)},
+            onEnter(){
+                player.points=new Decimal(1)
+                player.f.exp=new Decimal(1)
+                player.f.upgrades=[]
+            },
+            onExit(){
+                player.points=new Decimal(1)
+                player.f.exp=new Decimal(1)
+            },
+            onComplete(){
+                player.points=new Decimal(1)
+                player.f.exp=new Decimal(1)
+            },
+            countsAs:[12]
+        }
     }
+})
+addLayer("a", {
+    startData() { return {
+        unlocked: true,
+    }},
+    color: "yellow",
+    row: "side",
+    layerShown() {return true}, 
+    tooltip() { // Optional, tooltip displays when the layer is locked
+        return ("Achievements")
+    },
+    achievements: {
+        11: {
+            name: "Welcome!",
+            style:{"border-radius":"0%"},
+            done() {return hasUpgrade("f",11) },
+            tooltip: "Make the function makes sense.",
+        },
+        12: {
+            name: "2 is a lot",
+            style:{"border-radius":"0%"},
+            done() {return  player.points.gte(2)},
+            tooltip: "Earn 2 points.",
+        },
+        13: {
+            name: "I've got some adders",
+            style:{"border-radius":"0%"},
+            done() {return  player.f.adder.gte(1)&&player.f.ftype==0},
+            tooltip: "Let the adder of x bigger than 1 in stage 0.",
+        },
+        14: {
+            name: "Multi-function",
+            style:{"border-radius":"0%"},
+            done() {return  player.f.multiplier.gte(2)&&player.f.ftype==0},
+            tooltip: "Let the factor of x bigger than 2 in stage 0.",
+        },
+        15: {
+            name: `VA==`,
+            style:{"border-radius":"0%","border-color":"red"},
+            done() {return player.points.gte(10)&&player.f.multiplier.eq(1)&&player.f.ftype==0},
+            tooltip: `R2V0IDEwIHBvaW50cy
+            B3aXRob3V0IGhhdmluZ
+            yBhbnkgbXVsdGlwbG
+            llciBpbiBzdGFnZSA
+            wLg==
+            reward: Add 1 to the base adder of x only in stage 0.`,
+        },
+        21: {
+            name: "Gods are pleased",
+            style:{"border-radius":"0%"},
+            done() {return hasUpgrade("f",23) },
+            tooltip: "Unlock sacrifice.",
+        },
+        22: {
+            name: "What is change?",
+            style:{"border-radius":"0%"},
+            done() {return hasUpgrade("f",24) },
+            tooltip: "Buy upgrade IV",
+        },
+        23: {
+            name: "slog is lufrewop",
+            style:{"border-radius":"0%"},
+            done() {return player.points.gte(100) },
+            tooltip: "Earn 100 points",
+        },
+        24: {
+            name: "Noise.",
+            style:{"border-radius":"0%"},
+            done() {return player.f.exp.gte(1.69) },
+            tooltip: "Make the exponent of x bigger than 1.69",
+        },
+        25: {
+            name: `SA==`,
+            style:{"border-radius":"0%","border-color":"red"},
+            done() {return player.points.gte(10)&&player.f.multiplier.eq(1)&&player.f.ftype==0},
+            tooltip: `TWFrZSB0aGUgZXhwb25lb
+            nQgb2YgeCBleGFjdGx
+            5IDEuNjku
+            reward: Add 0.01 to sacrifice bonus only in stage 0.`,
+        },
+        update(diff) {	// Added this section to call adjustNotificationTime every tick, to reduce notification timers
+            adjustNotificationTime(diff);
+        },
+    },
+    tabFormat: [
+        "blank", 
+        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/9" }], 
+        ["display-text", function() { return`Achievements on the last column are chanllenging, complete them to get a bonus!(Maybe you can do them later)` }], 
+        "blank", "blank","blank","blank",
+        "achievements",
+    ],
 })
