@@ -614,7 +614,7 @@ addLayer("a", {
         35: {
             name: `RQ==`,
             style:{"border-radius":"0%","border-color":"red"},
-            done() {return player.f.exponent.gte("eeeeeeeeeeeeeeeeeee20")},
+            done() {return player.f.exp.gte("eeeeeeeeeeeeeeeeeee20")},
             tooltip: `TWFrZSB0aGUgZXhwb25l
             bnQgb2YgeCAxRjIwLg==
             reward: 1.05x Point gain.`,
