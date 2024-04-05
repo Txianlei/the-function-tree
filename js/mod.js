@@ -52,7 +52,7 @@ function getPointGen() {
 	let gain = new Decimal(1.1).times(new Decimal(4).pow(player.f.ftype))
 	gain=gain.plus(player.f.adder)
 	gain=gain.times(player.f.multiplier)
-	if(hasAchievements("f",35)) gain=gain.times(1.05)
+	if(hasAchievement("f",35)) gain=gain.times(1.05)
 	gain=gain.pow(player.f.exp)
 	if(player.f.ftype==0) gain=gain.slog()
 	if(player.f.ftype==1) gain=gain.log10()
