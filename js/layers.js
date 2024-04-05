@@ -31,20 +31,35 @@ addLayer("f", {
     row: 0, // Row the layer is in on the tree (0 is the first row)
     layerShown(){return true},
     tabFormat: {
-        "Main":{
+        "Slog(x)":{
             content:[
                 ["display-text",
                 function() { return 'Your point gain is:' },
                 {"font-size":"25px"}],
                 ["display-text",
-                    function() { return player.f.cfunc },
+                    function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
                     { "color": "red", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px red" }],
                 "blank",
-                "milestones",
                 "blank",
                 "blank",
                 "upgrades",
-            ]
+            ],
+            unlocked(){return player.f.ftype==0}
+        },
+        "log10(x)":{
+            content:[
+                ["display-text",
+                function() { return 'Your point gain is:' },
+                {"font-size":"25px"}],
+                ["display-text",
+                    function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
+                    { "color": "orange", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px orange" }],
+                "blank",
+                "blank",
+                "blank",
+                "upgrades",
+            ],
+            unlocked(){return player.f.ftype==1}
         },
         "Resets":{
             content:[
@@ -61,7 +76,7 @@ addLayer("f", {
                 "challenges"
             ],
             unlocked(){return player.f.challengechecker.gte(1)||hasUpgrade("f",35)}
-        }
+        },
     },
     update(diff){
         player.f.points=player.points
@@ -70,6 +85,7 @@ addLayer("f", {
         if(inChallenge("f",21)) player.f.slog21time+=(4*diff)
         if(inChallenge("f",22)) player.points=player.points.min(5000)
         if(player.f.ftype==0) player.f.cfunc="slog"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")"+(hasUpgrade("f",42)?"*"+format(upgradeEffect("f",42)):""))
+        if(player.f.ftype==1) player.f.cfunc="log10"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")
     },
     calcadder(){
         let add=new Decimal(0)
@@ -91,17 +107,17 @@ addLayer("f", {
         return add
     },
     calctimer(){
-        let multi=new Decimal(1)
-        if(hasUpgrade("f",13)) multi=multi.plus(0.25)
-        if(hasUpgrade("f",15)) multi=multi.plus(upgradeEffect("f",15))
-        if(hasChallenge("f",21)) multi=multi.plus(25)
-        if(hasUpgrade("f",21)) multi=multi.times(upgradeEffect("f",21))
-        if(hasUpgrade("f",25)) multi=multi.times(2)
-        if(hasUpgrade("f",45)) multi=multi.times(upgradeEffect("f",45))
-        if(hasChallenge("f",11)) multi=multi.times(challengeEffect("f",11))
-        if(hasUpgrade("f",33)) multi=multi.pow(upgradeEffect("f",33))
-        if(inChallenge("f",11)) multi=multi.sqrt()
-        return multi
+        let mult=new Decimal(1)
+        if(hasUpgrade("f",13)) mult=mult.plus(0.25)
+        if(hasUpgrade("f",15)) mult=mult.plus(upgradeEffect("f",15))
+        if(hasChallenge("f",21)&&player.f.ftype==0) mult=mult.plus(25)
+        if(hasUpgrade("f",21)) mult=mult.times(upgradeEffect("f",21))
+        if(hasUpgrade("f",25)) mult=mult.times(2)
+        if(hasUpgrade("f",45)) mult=mult.times(upgradeEffect("f",45))
+        if(hasChallenge("f",11)) mult=mult.times(challengeEffect("f",11))
+        if(hasUpgrade("f",33)) mult=mult.pow(upgradeEffect("f",33))
+        if(inChallenge("f",11)) mult=mult.sqrt()
+        return mult
     },
     calcexponent(){
         let expo=new Decimal(1)
@@ -109,7 +125,7 @@ addLayer("f", {
         else if(hasUpgrade("f",32))expo=expo.plus(player.points.plus(1).ln().cbrt().minus(1))//Sacrifice after XII
         else expo=expo.plus(player.points.plus(1).log10().sqrt().minus(1))//Sacrifice when unlocked
         if(inChallenge("f",22)) expo=expo.times(player.points.pow(200).plus(1).ln().pow(player.points.plus(1).slog()).pow(player.f.exp.div(hasUpgrade("f",52) ? 30 : hasUpgrade("f",51) ? 40 : 50)).max(0)).min("1eeeeeeeeeeeeeeeeeeee20")
-        return expo.add(hasAchievement("a",25)&&player.f.ftype==0 ? 1 : 0).max(1)
+        return expo.add(hasAchievement("a",25)&&player.f.ftype==0 ? 0.01 : 0).max(1)
     },
     upgrades:{
         11:{
@@ -381,7 +397,7 @@ addLayer("f", {
                 total boost:+^${format(player.f.exp.minus(1))}`:`Sacrifice all the points and upgrades to give this function an exponent.
                              currently:+^${format(tmp.f.calcexponent.minus(player.f.exp).max(0))}
                              total boost:+^${format(player.f.exp.minus(1))}`},
-            style:{"height":"200px","width":"200px","background-color":"#00000000","border-radius":"0%","border-color":"red","color":"red","text-shadow":"0 0 15px red","font-size":"15px"},
+            style:{"height":"300px","width":"300px","background-color":"#000000","border-radius":"0%","border":"6px solid","border-color":"red","color":"red","text-shadow":"0 0 15px red","font-size":"15px"},
             unlocked(){return hasUpgrade("f",23)||player.f.isSacrifice},
             onClick(){
                 player.f.isSacrifice=true
@@ -391,22 +407,50 @@ addLayer("f", {
             },
             canClick(){return hasUpgrade("f",23)||player.f.isSacrifice}
         },
+        12:{
+            title(){return "Upgrade your function"},
+            display(){
+                if (player.f.ftype==0){
+                    return `Reset all the progress but level up the function by 1.
+                    All upgrades will be removed.
+                    The formula of point gain will be log10(x).
+                    The value of x is 4 times bigger.
+                    All the slog chanllenges will be kept.
+                    `
+                }
+            },
+            style:{"height":"300px","width":"300px","background-color":"#000000","border-radius":"0%","border-color":"white","border":"6px solid","color":"white","text-shadow":"0 0 15px white","font-size":"15px","font-family":""},
+            unlocked(){
+                if(player.f.ftype==0){
+                    return hasChallenge("f",22)
+                }
+            },
+            onClick(){
+                player.f.ftype+=1
+                player.points=new Decimal(1)
+                player.f.upgrades=[]
+                player.f.adder=new Decimal(0)
+                player.f.multiplier=new Decimal(1)
+                player.f.exp=new Decimal(1)
+            },
+            canClick(){return hasUpgrade("f",23)||player.f.isSacrifice}
+        },
     },
     challenges:{
         11:{
             name:"slog 11",
             challengeDescription:"The factor of x is square-rooted.",
-            unlocked(){return hasChallenge("f",11)},
+            unlocked(){return hasUpgrade("f",35)||player.f.challengechecker.gte(1)},
             goalDescription(){return "145 points"},
             style:{"border-radius":"2%","border-color":"rgb(255,0,0)","color":"red","font-size":"18px","text-shadow":"0 0 15px red"},
             rewardDescription:"Upgrade XIV grows the factor of x with a multiplier.",
             canComplete(){return player.points.gte(145)},
-            marked(){return hasUpgrade("f",35)||player.f.challengechecker.gte(1)},
+            marked(){return hasChallenge("f",11)},
             onEnter(){
                 player.f.challengechecker=player.f.challengechecker.plus(1)
                 player.points=new Decimal(0)
             },
-            rewardEffect(){return hasChallenge("f",11) ? upgradeEffect("f",34).pow(20.24).log10().max(1) : new Decimal(1)},
+            rewardEffect(){return hasChallenge("f",11)&&hasUpgrade("f",34) ? upgradeEffect("f",34).pow(20.24).log10().max(1) : new Decimal(1)},
             rewardDisplay(){return `x${format(this.rewardEffect())}`}
         },
         12:{
@@ -429,7 +473,7 @@ addLayer("f", {
             unlocked(){return hasUpgrade("f",45)||player.f.challengechecker.gte(2)},
             goalDescription(){return "400 points"},
             style:{"border-radius":"2%","border-color":"rgb(255,0,0)","color":"red","font-size":"18px","text-shadow":"0 0 15px red"},
-            rewardDescription:"Add 25 to the base multiplier of x.",
+            rewardDescription:"Add 25 to the base multiplier of x in stage 0.",
             canComplete(){return player.points.gte(400)},
             marked(){return hasChallenge("f",21)},
             onEnter(){
@@ -443,7 +487,7 @@ addLayer("f", {
             challengeDescription:"Run 'slog 12',sacrifice formula is extremly stronger(Entering this will reset your exponent and do a sacrifice without bonus).",
             unlocked(){return hasChallenge("f",21)},
             goalDescription(){return "5000 points(Most points you can get in this challenge)"},
-            style:{"border-radius":"2%","border-color":"rgb(255,0,0)","background":"radial-gradient(red,orange,yellow,green,cyan,purple)","color":"rgb(0,0,0)","font-size":"18px","text-shadow":"0 0 15px white"},
+            style:{"border-radius":"2%","border-color":"rgb(255,0,0)","background":"radial-gradient(rgba(255,0,0,0.7),rgba(255,165,0,0.7),rgba(255,255,0,0.7),rgba(0,255,0,0.7),rgba(0,255,255,0.7),rgba(0,0,255,0.7),rgba(140,0,255,0.7))","color":"rgb(0,0,0)","font-size":"18px","text-shadow":"0 0 15px white"},
             rewardDescription:"You can upgrade your function",
             canComplete(){return player.points.gte(5000)},
             marked(){return hasChallenge("f",22)},
@@ -537,11 +581,43 @@ addLayer("a", {
         25: {
             name: `SA==`,
             style:{"border-radius":"0%","border-color":"red"},
-            done() {return player.points.gte(10)&&player.f.multiplier.eq(1)&&player.f.ftype==0},
+            done() {return player.f.exp.eq(1.69)},
             tooltip: `TWFrZSB0aGUgZXhwb25lb
             nQgb2YgeCBleGFjdGx
             5IDEuNjku
             reward: Add 0.01 to sacrifice bonus only in stage 0.`,
+        },
+        31: {
+            name: "A challenging day",
+            style:{"border-radius":"0%"},
+            done() {return player.f.challengechecker.neq(0) },
+            tooltip: "Enter a challenge.",
+        },
+        32: {
+            name: "Gods are confused",
+            style:{"border-radius":"0%"},
+            done() {return inChallenge("f",22)},
+            tooltip: "Entering slog final.",
+        },
+        33: {
+            name: "We're on the third!.",
+            style:{"border-radius":"0%"},
+            done() {return player.points.gte(1000) },
+            tooltip: "Earn 1000 points.",
+        },
+        34: {
+            name: "Bye bye-moment",
+            style:{"border-radius":"0%"},
+            done() {return player.f.ftype==1 },
+            tooltip: "Reach function stage 1.",
+        },
+        35: {
+            name: `RQ==`,
+            style:{"border-radius":"0%","border-color":"red"},
+            done() {return player.f.exponent.gte("eeeeeeeeeeeeeeeeeee20")},
+            tooltip: `TWFrZSB0aGUgZXhwb25l
+            bnQgb2YgeCAxRjIwLg==
+            reward: 1.05x Point gain.`,
         },
         update(diff) {	// Added this section to call adjustNotificationTime every tick, to reduce notification timers
             adjustNotificationTime(diff);

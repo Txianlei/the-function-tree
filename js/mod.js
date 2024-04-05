@@ -1,7 +1,7 @@
 let modInfo = {
 	name: "The function Tree",
 	id: "mymod",
-	author: "nobody",
+	author: "User incremental",
 	pointsName: "points",
 	modFiles: ["layers.js", "tree.js"],
 
@@ -13,14 +13,18 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.3",
+	name: "Stage 1",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.3</h3><br>
+		- Added 7 upgrades.<br>
+		- Added 4 challenges.<br>
+		- Can reach stage 1.<br>
 	<h3>v0.1</h3><br>
 		- Added Sacrifice.<br>
-		- Added 10 upgrades.
+		- Added 10 upgrades.<br>
 	<h3>v0.0</h3><br>
 		- Added function.<br>
 		- Added 5 upgrades.`
@@ -45,11 +49,13 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(1.1)
+	let gain = new Decimal(1.1).times(new Decimal(4).pow(player.f.ftype))
 	gain=gain.plus(player.f.adder)
 	gain=gain.times(player.f.multiplier)
+	if(hasAchievements("f",35)) gain=gain.times(1.05)
 	gain=gain.pow(player.f.exp)
 	if(player.f.ftype==0) gain=gain.slog()
+	if(player.f.ftype==1) gain=gain.log10()
 	if(hasUpgrade("f",42)) gain=gain.times(upgradeEffect("f",42))
 	return gain
 }
