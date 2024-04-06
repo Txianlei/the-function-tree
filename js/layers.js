@@ -13,6 +13,7 @@ addLayer("f", {
         challengechecker: new Decimal(0),
         slog21time: 0,
         cfunc: "",
+        y:new Decimal(1000),
     }},
     color: "#FFFFFF",
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
@@ -46,13 +47,16 @@ addLayer("f", {
             ],
             unlocked(){return player.f.ftype==0}
         },
-        "log10(x)":{
+        "logᵧ(x)":{
             content:[
                 ["display-text",
                 function() { return 'Your point gain is:' },
                 {"font-size":"25px"}],
                 ["display-text",
                     function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
+                    { "color": "orange", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px orange" }],
+                ["display-text",
+                    function() { return "γ="+format(player.f.y)},
                     { "color": "orange", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px orange" }],
                 "blank",
                 "blank",
@@ -82,13 +86,15 @@ addLayer("f", {
         player.f.points=player.points
         player.f.adder=tmp.f.calcadder
         player.f.multiplier=tmp.f.calctimer
+        player.f.y=tmp.f.calcgamma
         if(inChallenge("f",21)) player.f.slog21time+=(4*diff)
         if(inChallenge("f",22)) player.points=player.points.min(5000)
         if(player.f.ftype==0) player.f.cfunc="slog"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")"+(hasUpgrade("f",42)?"*"+format(upgradeEffect("f",42)):""))
-        if(player.f.ftype==1) player.f.cfunc="log10"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")
+        if(player.f.ftype==1) player.f.cfunc="logᵧ"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")
     },
     calcadder(){
         let add=new Decimal(0)
+        //stage 0 +
         if(hasUpgrade("f",12)) add=add.plus(0.1)
         if(hasUpgrade("f",14)) add=add.plus(upgradeEffect("f",14))
         if(hasUpgrade("f",22)) add=add.plus(upgradeEffect("f",15).times(2).add(1).pow(1.5))
@@ -100,32 +106,55 @@ addLayer("f", {
         if(hasUpgrade("f",41)&&hasUpgrade("f",45)) add=add.plus(10)
         if(hasAchievement("a",15)&&player.f.ftype==0) add=add.plus(1)
         if(inChallenge("f",21)) add=add.minus(player.f.slog21time).max(0)
+        //stage 1 +
+        if(hasUpgrade("f",62)) add=add.plus(upgradeEffect("f",62))
+        if(hasUpgrade("f",65)) add=add.plus(upgradeEffect("f",65))
+        //stage 0 *
         if(hasUpgrade("f",24)) add=add.times(2)
         if(hasUpgrade("f",31)) add=add.times(upgradeEffect("f",31))
         if(hasUpgrade("f",44)) add=add.times(upgradeEffect("f",44))
+        //stage 0 ^
         if(hasUpgrade("f",34)) add=add.pow(upgradeEffect("f",34))
         return add
     },
     calctimer(){
         let mult=new Decimal(1)
+        //stage 0 +
         if(hasUpgrade("f",13)) mult=mult.plus(0.25)
         if(hasUpgrade("f",15)) mult=mult.plus(upgradeEffect("f",15))
         if(hasChallenge("f",21)&&player.f.ftype==0) mult=mult.plus(25)
+        //stage 1 +
+        if(hasUpgrade("f",64)) mult=mult.plus(0.4)
+        if(hasUpgrade("f",71)) mult=mult.plus(upgradeEffect("f",71))
+        //stgae 0 *
         if(hasUpgrade("f",21)) mult=mult.times(upgradeEffect("f",21))
         if(hasUpgrade("f",25)) mult=mult.times(2)
         if(hasUpgrade("f",45)) mult=mult.times(upgradeEffect("f",45))
         if(hasChallenge("f",11)) mult=mult.times(challengeEffect("f",11))
+        //stage 0 ^
         if(hasUpgrade("f",33)) mult=mult.pow(upgradeEffect("f",33))
         if(inChallenge("f",11)) mult=mult.sqrt()
         return mult
     },
     calcexponent(){
         let expo=new Decimal(1)
-        if(hasChallenge("f",12)) expo=expo.plus(player.points.log10().pow(1.15).add(1).ln())//Sacrifice after slog12
-        else if(hasUpgrade("f",32))expo=expo.plus(player.points.plus(1).ln().cbrt().minus(1))//Sacrifice after XII
-        else expo=expo.plus(player.points.plus(1).log10().sqrt().minus(1))//Sacrifice when unlocked
+        if(player.f.ftype==1){
+            expo=expo.plus(player.points.add(1).log(player.f.y).pow(1.5).max(0))
+        }
+        //stage 0
+        if(player.f.ftype==0){
+            if(hasChallenge("f",12)) expo=expo.plus(player.points.add(1).log10().pow(1.15).add(1).ln())//Sacrifice after slog12
+            else if(hasUpgrade("f",32))expo=expo.plus(player.points.plus(1).ln().cbrt().minus(1))//Sacrifice after XII
+            else expo=expo.plus(player.points.plus(1).log10().sqrt().minus(1))//Sacrifice when unlocked
+        }
         if(inChallenge("f",22)) expo=expo.times(player.points.pow(200).plus(1).ln().pow(player.points.plus(1).slog()).pow(player.f.exp.div(hasUpgrade("f",52) ? 30 : hasUpgrade("f",51) ? 40 : 50)).max(0)).min("1eeeeeeeeeeeeeeeeeeee20")
         return expo.add(hasAchievement("a",25)&&player.f.ftype==0 ? 0.01 : 0).max(1)
+    },
+    calcgamma(){
+        let gamma=new Decimal(1000)
+        if(hasUpgrade("f",63)) gamma=gamma.minus(10)
+        if(hasUpgrade("f",72)) gamma=gamma.minus(20)
+        return gamma
     },
     upgrades:{
         11:{
@@ -388,6 +417,89 @@ addLayer("f", {
             canAfford(){return player.points.gte(800)},
             pay(){return player.points=player.points.minus(800)},
         },
+        61:{
+            title:"I",
+            description(){return "Generate 1.1 points per second."},
+            cost(){return new Decimal(1)},
+            unlocked(){ 
+                return player.f.unlocked&&player.f.ftype==1
+            },
+            style:{"color":"rgba(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(1)},
+            pay(){return player.points=player.points.minus(1)}
+        },
+        62:{
+            title:"II",
+            description(){return "Add a number to x based on points."},
+            cost(){return new Decimal(0.25)},
+            unlocked(){ 
+                return hasUpgrade("f",61)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(0.25)},
+            pay(){return player.points=player.points.minus(0.25)},
+            effect(){return player.points.add(1).log10().pow(2).min(100)},
+            effectDisplay(){return `+${format(upgradeEffect("f",62))}`},
+        },
+        63:{
+            title:"III",
+            description(){return "γ is subtracted by 10."},
+            cost(){return new Decimal(3)},
+            unlocked(){ 
+                return hasUpgrade("f",62)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(3)},
+            pay(){return player.points=player.points.minus(3)},
+        },
+        64:{
+            title:"IV",
+            description(){return "Add 0.4 to the factor of x."},
+            cost(){return new Decimal(6)},
+            unlocked(){ 
+                return hasUpgrade("f",63)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(6)},
+            pay(){return player.points=player.points.minus(6)},
+        },
+        65:{
+            title:"V",
+            description(){return "Add a number to x based on the exponent of x."},
+            cost(){return new Decimal(10)},
+            unlocked(){ 
+                return hasUpgrade("f",64)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(10)},
+            pay(){return player.points=player.points.minus(10)},
+            effect(){return player.f.exp.pow(5).div(player.f.exp.pow(3))},
+            effectDisplay(){return `+${format(upgradeEffect("f",65))}`},
+        },
+        71:{
+            title:"VI",
+            description(){return "Add a number to the factor of x based on points."},
+            cost(){return new Decimal(15)},
+            unlocked(){ 
+                return hasUpgrade("f",65)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(15)},
+            pay(){return player.points=player.points.minus(15)},
+            effect(){return player.points.add(1).log10().sqrt().times(5)},
+            effectDisplay(){return `+${format(upgradeEffect("f",71))}`},
+        },
+        72:{
+            title:"III",
+            description(){return "γ is subtracted by 20."},
+            cost(){return new Decimal(30)},
+            unlocked(){ 
+                return hasUpgrade("f",71)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(30)},
+            pay(){return player.points=player.points.minus(30)},
+        },
     },
     clickables:{
         11:{
@@ -414,7 +526,6 @@ addLayer("f", {
                     return `Reset all the progress but level up the function by 1.
                     All upgrades will be removed.
                     The formula of point gain will be log10(x).
-                    The value of x is 4 times bigger.
                     All the slog chanllenges will be kept.
                     `
                 }
@@ -625,7 +736,7 @@ addLayer("a", {
     },
     tabFormat: [
         "blank", 
-        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/9" }], 
+        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/15" }], 
         ["display-text", function() { return`Achievements on the last column are chanllenging, complete them to get a bonus!(Maybe you can do them later)` }], 
         "blank", "blank","blank","blank",
         "achievements",
