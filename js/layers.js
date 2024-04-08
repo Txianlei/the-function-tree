@@ -899,7 +899,7 @@ addLayer("a", {
         45: {
             name: `VA==`,
             style:{"border-radius":"0%","border-color":"orange"},
-            done() {return player.f.exp.gte},
+            done() {return player.points.gte(250)&&player.f.ftype>=1&&player.f.calevel.eq(0)},
             tooltip: `RWFybiAyNTAgcG9
             pbnRzIHdpdGhvdXQg
             Y2hhcmdpbmcgYWRkZXIu
