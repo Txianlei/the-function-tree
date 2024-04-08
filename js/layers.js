@@ -9,8 +9,14 @@ addLayer("f", {
         adder: new Decimal(0),
         multiplier: new Decimal(1),
         exp: new Decimal(1),
+        careq: new Decimal(10),
+        calevel: new Decimal(0),
+        capoints: new Decimal(0),
+        caeffect: new Decimal(1),
         isSacrifice: false,
         challengechecker: new Decimal(0),
+        isca:false,
+        iscm:false,
         slog21time: 0,
         cfunc: "",
         y:new Decimal(1000),
@@ -65,7 +71,7 @@ addLayer("f", {
             ],
             unlocked(){return player.f.ftype==1}
         },
-        "Resets":{
+        "Boosters":{
             content:[
                 ["display-text",
                 function() { return "Your function stage is " + player.f.ftype },
@@ -87,6 +93,8 @@ addLayer("f", {
         player.f.adder=tmp.f.calcadder
         player.f.multiplier=tmp.f.calctimer
         player.f.y=tmp.f.calcgamma
+        player.f.caeffect=new Decimal(1.5).pow(player.f.calevel)
+        if(hasUpgrade("f",75)) player.f.isca=true
         if(inChallenge("f",21)) player.f.slog21time+=(4*diff)
         if(inChallenge("f",22)) player.points=player.points.min(5000)
         if(player.f.ftype==0) player.f.cfunc="slog"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")"+(hasUpgrade("f",42)?"*"+format(upgradeEffect("f",42)):""))
@@ -113,6 +121,9 @@ addLayer("f", {
         if(hasUpgrade("f",24)) add=add.times(2)
         if(hasUpgrade("f",31)) add=add.times(upgradeEffect("f",31))
         if(hasUpgrade("f",44)) add=add.times(upgradeEffect("f",44))
+        //stage 1 *
+        if(hasUpgrade("f",73)) add=add.times(upgradeEffect("f",73))
+        add=add.times(player.f.caeffect)
         //stage 0 ^
         if(hasUpgrade("f",34)) add=add.pow(upgradeEffect("f",34))
         return add
@@ -126,11 +137,14 @@ addLayer("f", {
         //stage 1 +
         if(hasUpgrade("f",64)) mult=mult.plus(0.4)
         if(hasUpgrade("f",71)) mult=mult.plus(upgradeEffect("f",71))
+        if(hasUpgrade("f",81)) mult=mult.plus(upgradeEffect("f",81))
         //stgae 0 *
         if(hasUpgrade("f",21)) mult=mult.times(upgradeEffect("f",21))
         if(hasUpgrade("f",25)) mult=mult.times(2)
         if(hasUpgrade("f",45)) mult=mult.times(upgradeEffect("f",45))
         if(hasChallenge("f",11)) mult=mult.times(challengeEffect("f",11))
+        //stage 1 *
+        if(hasUpgrade("f",84)) mult=mult.times(4)
         //stage 0 ^
         if(hasUpgrade("f",33)) mult=mult.pow(upgradeEffect("f",33))
         if(inChallenge("f",11)) mult=mult.sqrt()
@@ -138,8 +152,10 @@ addLayer("f", {
     },
     calcexponent(){
         let expo=new Decimal(1)
+        //stage 1
         if(player.f.ftype==1){
-            expo=expo.plus(player.points.add(1).log(player.f.y).pow(1.5).max(0))
+            if(hasUpgrade("f",73)) expo=expo.plus(player.points.add(1).log(player.f.y.pow(0.95)).add(1).pow(1.1).minus(1).max(0))//After IX
+            else expo=expo.plus(player.points.add(1).log(player.f.y).pow(1.5).max(0))//normal
         }
         //stage 0
         if(player.f.ftype==0){
@@ -154,7 +170,18 @@ addLayer("f", {
         let gamma=new Decimal(1000)
         if(hasUpgrade("f",63)) gamma=gamma.minus(10)
         if(hasUpgrade("f",72)) gamma=gamma.minus(20)
+        if(hasUpgrade("f",82)) gamma=gamma.minus(upgradeEffect("f",82))
         return gamma
+    },
+    chargeadder(){
+        let progress=player.f.capoints.max(1).log10().div(player.f.careq.log10())
+        if(progress.gte(1)){
+            player.f.calevel=player.f.calevel.plus(1)
+            player.f.capoints=new Decimal(0)
+
+        }
+        player.f.careq=new Decimal(hasUpgrade("f",83) ? 15 : 18).pow(new Decimal(18).pow(player.f.calevel.div(4)).log10()).times(hasAchievement("a",45) ? 0.97 : 1)
+        return format(progress.times(100))+"%"
     },
     upgrades:{
         11:{
@@ -275,7 +302,7 @@ addLayer("f", {
         },
         31:{
             title:"XI",
-            description(){return "Multiply the adder of x based on the facor of x."},
+            description(){return "Multiply the adder of x based on the factor of x."},
             cost(){return new Decimal(90)},
             unlocked(){ 
                 return hasUpgrade("f",25)&&player.f.ftype==0&&player.f.isSacrifice
@@ -490,7 +517,7 @@ addLayer("f", {
             effectDisplay(){return `+${format(upgradeEffect("f",71))}`},
         },
         72:{
-            title:"III",
+            title:"VII",
             description(){return "γ is subtracted by 20."},
             cost(){return new Decimal(30)},
             unlocked(){ 
@@ -499,6 +526,105 @@ addLayer("f", {
             style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
             canAfford(){return player.points.gte(30)},
             pay(){return player.points=player.points.minus(30)},
+        },
+        73:{
+            title:"VIII",
+            description(){return "Multiply the adder of x based on the factor of x."},
+            cost(){return new Decimal(37)},
+            unlocked(){ 
+                return hasUpgrade("f",72)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(37)},
+            pay(){return player.points=player.points.minus(37)},
+            effect(){return player.points.add(1).sqrt().log10().pow(1.5).add(1)},
+            effectDisplay(){return `x${format(upgradeEffect("f",73))}`},
+        },
+        74:{
+            title:"IX",
+            description(){return "Sacrifice formula is better."},
+            cost(){return new Decimal(50)},
+            unlocked(){ 
+                return hasUpgrade("f",73)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(50)},
+            pay(){return player.points=player.points.minus(50)},
+        },
+        75:{
+            title:"X",
+            description(){return "Unlock charger."},
+            cost(){return new Decimal(50)}, 
+            unlocked(){ 
+                return hasUpgrade("f",74)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(50)},
+            pay(){return player.points=player.points.minus(50)},
+        },
+        81:{
+            title:"XI",
+            description(){return "Add a number based on the level of adder charger to the factor of x."},
+            cost(){return new Decimal(90)}, 
+            unlocked(){ 
+                return hasUpgrade("f",75)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(90)},
+            pay(){return player.points=player.points.minus(90)},
+            effect(){return player.f.calevel.pow(2)},
+            effectDisplay(){return `+${format(upgradeEffect("f",81))}`},
+        },
+        82:{
+            title:"XII",
+            description(){return "γ is subtracted by a number based on your points."},
+            cost(){return new Decimal(110)},
+            unlocked(){ 
+                return hasUpgrade("f",81)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(110)},
+            pay(){return player.points=player.points.minus(110)},
+            effect(){return player.f.points.add(1).log10().pow(2).min(50)},
+            effectDisplay(){return `-${format(upgradeEffect("f",82))}`},
+        },
+        83:{
+            title:"XIII",
+            description(){return "Reduce the cost of charging adder(Reset the level as well)."},
+            cost(){return new Decimal(150)},
+            unlocked(){ 
+                return hasUpgrade("f",82)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(150)},
+            pay(){return player.points=player.points.minus(150)},
+            onPurchase(){
+                player.f.capoints=new Decimal(0)
+                player.f.careq=new Decimal(10)
+                player.f.calevel=new Decimal(0)
+            }
+        },
+        84:{
+            title:"XIV",
+            description(){return "The factor of x is 4x bigger."},
+            cost(){return new Decimal(200)},
+            unlocked(){ 
+                return hasUpgrade("f",83)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(200)},
+            pay(){return player.points=player.points.minus(200)},
+        },
+        85:{
+            title:"XV",
+            description(){return "Unlock a new charger.(Coming soon)"},
+            cost(){return new Decimal(200)},
+            unlocked(){ 
+                return hasUpgrade("f",84)&&player.f.ftype==1
+            },
+            style:{"color":"rgb(255,125,0)","text-shadow" : "0 0 5px orange",},
+            canAfford(){return player.points.gte(200)},
+            pay(){return player.points=player.points.minus(200)},
         },
     },
     clickables:{
@@ -545,6 +671,22 @@ addLayer("f", {
                 player.f.exp=new Decimal(1)
             },
             canClick(){return hasUpgrade("f",23)||player.f.isSacrifice}
+        },
+        21:{
+            title(){return "Adder charger"},
+            display(){return `Hold this to charge points into the adder of x.
+                            requirement:${format(player.f.careq)}
+                            level:${format(player.f.calevel)}
+                            effect:x${format(player.f.caeffect)}
+                            progress:${tmp.f.chargeadder}
+                            (${format(player.f.capoints)}/${format(player.f.careq)})`},
+            style:{"height":"300px","width":"300px","background-color":"#000000","border-radius":"0%","border":"6px solid","border-color":"orange","color":"orange","text-shadow":"0 0 15px orange","font-size":"15px"},
+            unlocked(){return hasUpgrade("f",75)||player.f.isca},
+            onHold(){
+                player.f.capoints=player.f.capoints.plus(player.points.times(0.1))
+                player.points=player.points.minus(player.points.times(0.1))
+            },
+            canClick(){return hasUpgrade("f",75)||player.f.isca}
         },
     },
     challenges:{
@@ -617,7 +759,7 @@ addLayer("f", {
             },
             countsAs:[12]
         }
-    }
+    },
 })
 addLayer("a", {
     startData() { return {
@@ -692,7 +834,7 @@ addLayer("a", {
         25: {
             name: `SA==`,
             style:{"border-radius":"0%","border-color":"red"},
-            done() {return player.f.exp.eq(1.69)},
+            done() {return player.f.exp.gt(1.685)&&player.f.exp.lt(1.694)},
             tooltip: `TWFrZSB0aGUgZXhwb25lb
             nQgb2YgeCBleGFjdGx
             5IDEuNjku
@@ -730,13 +872,46 @@ addLayer("a", {
             bnQgb2YgeCAxRjIwLg==
             reward: 1.05x Point gain.`,
         },
+        41: {
+            name: "A new function",
+            style:{"border-radius":"0%"},
+            done() {return hasUpgrade("f",61) },
+            tooltip: "Buy upgrade I,again.",
+        },
+        42: {
+            name: "Gamma rays",
+            style:{"border-radius":"0%"},
+            done() {return player.f.y.lt(1000) },
+            tooltip: "Make γ lesser than 1000.",
+        },
+        43: {
+            name: "Shall we sacrifice?",
+            style:{"border-radius":"0%"},
+            done() {return player.f.exp.gt(1)&&player.f.ftype>=1 },
+            tooltip: "Sacrifice in non-slog function stages.",
+        },
+        44: {
+            name: "Yet another reference.",
+            style:{"border-radius":"0%"},
+            done() {return player.f.capoints.gt(0) },
+            tooltip: "Charge your adder.",
+        },
+        45: {
+            name: `VA==`,
+            style:{"border-radius":"0%","border-color":"orange"},
+            done() {return player.f.exp.gte},
+            tooltip: `RWFybiAyNTAgcG9
+            pbnRzIHdpdGhvdXQg
+            Y2hhcmdpbmcgYWRkZXIu
+            reward: Reduce the cost of charging adder a bit.`,
+        },
         update(diff) {	// Added this section to call adjustNotificationTime every tick, to reduce notification timers
             adjustNotificationTime(diff);
         },
     },
     tabFormat: [
         "blank", 
-        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/15" }], 
+        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/20" }], 
         ["display-text", function() { return`Achievements on the last column are chanllenging, complete them to get a bonus!(Maybe you can do them later)` }], 
         "blank", "blank","blank","blank",
         "achievements",
