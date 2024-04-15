@@ -128,7 +128,7 @@ addLayer("f", {
         //stage 1 *
         if(hasUpgrade("f",73)) add=add.times(upgradeEffect("f",73))
         if(hasUpgrade("f",93)) add=add.times(upgradeEffect("f",73))
-        if(isca) add=add.times(player.f.caeffect)
+        if(player.f.isca) add=add.times(player.f.caeffect)
         //stage 0 ^
         if(hasUpgrade("f",34)) add=add.pow(upgradeEffect("f",34))
         return add
@@ -150,7 +150,7 @@ addLayer("f", {
         if(hasChallenge("f",11)) mult=mult.times(challengeEffect("f",11))
         //stage 1 *
         if(hasUpgrade("f",84)) mult=mult.times(4)
-        if (iscm)mult=mult.times(player.f.cmeffect)
+        if (player.f.iscm)mult=mult.times(player.f.cmeffect)
         //stage 0 ^
         if(hasUpgrade("f",33)) mult=mult.pow(upgradeEffect("f",33))
         if(inChallenge("f",11)) mult=mult.sqrt()
