@@ -13,12 +13,17 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.4",
-	name: "Charger",
+	num: "0.4.5",
+	name: "Display changes",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h4>v0.3.5</h4>
+	<h4>v0.4.5</h4>
+		-Upgrade font color is black now.<br>
+		-Stage 0 formula color is rgb(205,125,105) now.<br>
+		-change the clickables and challenges for color in stage 0.<br>
+		-Added a challenge.<br>
+	<h3>v0.4</h3>
 		-Added 15 upgrades.<br>
 		-Added charger.<br>
 	<h3>v0.3</h3><br>
@@ -60,6 +65,7 @@ function getPointGen() {
 	if(player.f.ftype==0) gain=gain.slog()
 	if(player.f.ftype==1) gain=Decimal.log(gain,player.f.y)
 	if(hasUpgrade("f",42)) gain=gain.times(upgradeEffect("f",42))
+	if(inChallenge("f",31)) gain=gain.div(player.f.y.pow(((challengeCompletions("f",31)+1)*0.25)))
 	return gain
 }
 
@@ -73,7 +79,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return hasUpgrade("f",85)
+	return false
 }
 
 
