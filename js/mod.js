@@ -13,17 +13,25 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.4.5",
-	name: "Display changes",
+	num: "0.5",
+	name: "Stage 2",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
+let changelog = `
+	<h1><b>Current endgame: Reach stage 2</h1><br><br>
+	<h1>Changelog:</h1><br>
+	<h3>v0.5</h3><br>
+		-Challenge font color is default now.<br>
+		-Added 3 challenges.<br>
+		-Fixed some bugs.<br>
+		-Added 5 upgrades.<br>
+		-Added 10 achievements.<br>
 	<h4>v0.4.5</h4>
 		-Upgrade font color is black now.<br>
 		-Stage 0 formula color is rgb(205,125,105) now.<br>
 		-change the clickables and challenges for color in stage 0.<br>
 		-Added a challenge.<br>
-	<h3>v0.4</h3>
+	<h3>v0.4</h3><br>
 		-Added 15 upgrades.<br>
 		-Added charger.<br>
 	<h3>v0.3</h3><br>
@@ -79,7 +87,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return false
+	return player.f.ftype==2
 }
 
 

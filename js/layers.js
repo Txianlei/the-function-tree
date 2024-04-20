@@ -22,6 +22,7 @@ addLayer("f", {
         isca:false,
         iscm:false,
         slog21time: 0,
+        log12time: 0,
         cfunc: "",
         y:new Decimal(1000),
     }},
@@ -48,11 +49,11 @@ addLayer("f", {
                 function() { return 'Your point gain is:' },
                 {"font-size":"25px"}],
                 ["display-text",
-                    function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
-                    { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px rgb(200,100,120)" }],
+                function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
+                { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(200,100,120)" }]
                 ["display-text",
                 function() { return `You have ${format(player.points)} points.`},
-                { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px rgb(200,100,120)" }],
+                { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(200,100,120)" }],
                 "blank",
                 "blank",
                 "blank",
@@ -67,19 +68,37 @@ addLayer("f", {
                 {"font-size":"25px"}],
                 ["display-text",
                     function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
-                    { "color": "orange", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px orange" }],
+                    { "color": "orange", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px orange" }],
                 ["display-text",
                     function() { return "γ="+format(player.f.y)},
-                    { "color": "orange", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px orange" }],
+                    { "color": "orange", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px orange" }],
                 ["display-text",
                     function() { return `You have ${format(player.points)} points.`},
-                { "color": "orange", "font-size": "50px", "font-family": "Georgia", "text-shadow" : "0 0 15px orange" }],
+                { "color": "orange", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px orange" }],
                 "blank",
                 "blank",
                 "blank",
                 "upgrades",
             ],
             unlocked(){return player.f.ftype==1}
+        },
+        "log10(x)":{
+            content:[
+                ["display-text",
+                function() { return 'Your point gain is:' },
+                {"font-size":"25px"}],
+                ["display-text",
+                    function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
+                    { "color": "rgb(255,180,0)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px yellow" }],
+                ["display-text",
+                    function() { return `You have ${format(player.points)} points.`},
+                { "color": "rgb(255,180,0)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px yellow" }],
+                "blank",
+                "blank",
+                "blank",
+                "upgrades",
+            ],
+            unlocked(){return player.f.ftype==2}
         },
         "Boosters":{
             content:[
@@ -103,13 +122,16 @@ addLayer("f", {
         player.f.adder=tmp.f.calcadder
         player.f.multiplier=tmp.f.calctimer
         player.f.y=tmp.f.calcgamma
-        player.f.caeffect=new Decimal(1.5).pow(player.f.calevel)
-        player.f.cmeffect=new Decimal(1.8).pow(player.f.cmlevel).pow(0.75)
+        player.f.caeffect=tmp.f.effofca.pow(player.f.calevel)
+        player.f.cmeffect=tmp.f.effofcm.pow(player.f.cmlevel).pow(0.75)
         if(hasUpgrade("f",75)) player.f.isca=true
         if(inChallenge("f",21)) player.f.slog21time+=(4*diff)
+        if(inChallenge("f",32)) player.f.log12time+=((challengeCompletions("f",32)*8+8)*(diff*5))
         if(inChallenge("f",22)) player.points=player.points.min(5000)
+        if(inChallenge("f",42)) player.points=player.points.min(20240)
         if(player.f.ftype==0) player.f.cfunc="slog"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")+(hasUpgrade("f",42)?"*"+format(upgradeEffect("f",42)):"")
         if(player.f.ftype==1) player.f.cfunc="logᵧ"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")+(inChallenge("f",31)?"/"+format(player.f.y.pow(((challengeCompletions("f",31)+1)*0.25))):"")
+        if(player.f.ftype==2) player.f.cfunc="log10"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")
     },
     calcadder(){
         let add=new Decimal(0)
@@ -117,7 +139,7 @@ addLayer("f", {
         if(hasUpgrade("f",12)) add=add.plus(0.1)
         if(hasUpgrade("f",14)) add=add.plus(upgradeEffect("f",14))
         if(hasUpgrade("f",22)) add=add.plus(upgradeEffect("f",15).times(2).add(1).pow(1.5))
-        if(hasUpgrade("f",41)) add=add.plus(10)        
+        if(hasUpgrade("f",41)) add=add.plus(10)
         if(hasUpgrade("f",41)&&hasUpgrade("f",42)) add=add.plus(10)        
         if(hasUpgrade("f",41)&&hasUpgrade("f",43)) add=add.plus(10)        
         if(hasUpgrade("f",41)&&hasUpgrade("f",44)) add=add.plus(10)        
@@ -127,6 +149,9 @@ addLayer("f", {
         //stage 1 +
         if(hasUpgrade("f",62)) add=add.plus(upgradeEffect("f",62))
         if(hasUpgrade("f",65)) add=add.plus(upgradeEffect("f",65))
+        if(hasUpgrade("f",102)) add=add.plus(upgradeEffect("f",102))
+        //LOGY21 DEBUFF
+        if(inChallenge("f",41)) add=new Decimal(1)
         //stage 0 *
         if(hasUpgrade("f",24)) add=add.times(2)
         if(hasUpgrade("f",31)) add=add.times(upgradeEffect("f",31))
@@ -134,9 +159,12 @@ addLayer("f", {
         //stage 1 *
         if(hasUpgrade("f",73)) add=add.times(upgradeEffect("f",73))
         if(hasUpgrade("f",93)) add=add.times(upgradeEffect("f",73))
+        if(hasUpgrade("f",104)) add=add.times(5)
         if(player.f.isca) add=add.times(player.f.caeffect)
         //stage 0 ^
         if(hasUpgrade("f",34)) add=add.pow(upgradeEffect("f",34))
+        //stage 1 ^
+        if(hasChallenge("f",41)&&player.f.ftype==1) add=add.pow(1.5)
         return add
     },
     calctimer(){
@@ -149,7 +177,9 @@ addLayer("f", {
         if(hasUpgrade("f",64)) mult=mult.plus(0.4)
         if(hasUpgrade("f",71)) mult=mult.plus(upgradeEffect("f",71))
         if(hasUpgrade("f",81)) mult=mult.plus(upgradeEffect("f",81))
-        //stgae 0 *
+        //LOGY21 DEBUFF
+        if(inChallenge("f",41)) mult=new Decimal(1)
+        //stage 0 *
         if(hasUpgrade("f",21)) mult=mult.times(upgradeEffect("f",21))
         if(hasUpgrade("f",25)) mult=mult.times(2)
         if(hasUpgrade("f",45)) mult=mult.times(upgradeEffect("f",45))
@@ -160,10 +190,13 @@ addLayer("f", {
         //stage 0 ^
         if(hasUpgrade("f",33)) mult=mult.pow(upgradeEffect("f",33))
         if(inChallenge("f",11)) mult=mult.sqrt()
+        //stage 1 ^
+        if(hasAchievement("a",55)&&player.f.ftype==1) mult=mult.pow(1.05)
         return mult
     },
     calcexponent(){
         let expo=new Decimal(1)
+        let expo22=new Decimal(1)
         //stage 1
         if(player.f.ftype==1){
             if(hasUpgrade("f",92)) expo=expo.plus(player.points.pow(2).add(1).log(player.f.y.pow(0.8)).minus(1).max(0))//After XVII
@@ -176,8 +209,8 @@ addLayer("f", {
             else if(hasUpgrade("f",32))expo=expo.plus(player.points.plus(1).ln().cbrt().minus(1))//Sacrifice after XII
             else expo=expo.plus(player.points.plus(1).log10().sqrt().minus(1))//Sacrifice when unlocked
         }
-        if(inChallenge("f",22)) expo=expo.times(player.points.pow(200).plus(1).ln().pow(player.points.plus(1).slog()).pow(player.f.exp.div(hasUpgrade("f",52) ? 30 : hasUpgrade("f",51) ? 40 : 50)).max(0)).min("1eeeeeeeeeeeeeeeeeeee20")
-        return expo.add(hasAchievement("a",25)&&player.f.ftype==0 ? 0.01 : 0).max(1)
+        expo22=expo22.times(player.points.pow(200).plus(1).ln().pow(player.points.plus(1).slog()).pow(player.f.exp.div(hasUpgrade("f",52) ? 30 : hasUpgrade("f",51) ? 40 : 50)).max(0)).min("1eeeeeeeeeeeeeeeeeeee20")
+        return (inChallenge("f",22) ? expo22 : expo).add(hasAchievement("a",25)&&player.f.ftype==0 ? 0.01 : 0).max(1)
     },
     calcgamma(){
         let gamma=new Decimal(1000)
@@ -189,6 +222,8 @@ addLayer("f", {
         if(hasUpgrade("f",91)&&hasUpgrade("f",93)) gamma=gamma.minus(15)    
         if(hasUpgrade("f",91)&&hasUpgrade("f",94)) gamma=gamma.minus(15)       
         if(hasUpgrade("f",91)&&hasUpgrade("f",95)) gamma=gamma.minus(15)
+        if(inChallenge("f",32)) gamma=gamma.add(player.f.log12time)
+        if(challengeCompletions("f",32)>0) gamma=gamma.minus(challengeCompletions("f",32)*50)
         return gamma
     },
     chargeadder(){
@@ -199,24 +234,42 @@ addLayer("f", {
         if(inChallenge("f",31)) scal1=new Decimal(11)
         if(challengeCompletions("f",31)>0) scal1=scal1.minus(challengeCompletions("f",31)*0.5)
         if(progress.gte(1)){
+            if(inChallenge("f",42)) player.points=new Decimal(0)
             player.f.calevel=player.f.calevel.plus(1)
             player.f.capoints=new Decimal(0)
         }
-        player.f.careq=scal1.pow(new Decimal(18).pow(player.f.calevel.div(4)).log10()).times(hasAchievement("a",45) ? 0.97 : 1).plus(inChallenge("f",31) ? 1 : 10)
+        player.f.careq=scal1.pow(new Decimal(18).pow(player.f.calevel.div(inChallenge("f",42)? 6 : 4)).log10()).times(hasAchievement("a",45) ? 0.97 : 1).plus(inChallenge("f",31) ? 1 : 10)
         return format(progress.times(100))+"%"
+    },
+    effofca(){
+        let eff1=new Decimal(1.5)
+        if(hasUpgrade("f",101)) eff1=eff1.plus(0.1)
+        if(player.f.ftype>=2) eff1=eff1.plus(0.1)
+        if (inChallenge("f",42)) eff1=player.f.calevel.div(5-(player.f.calevel.div(5).min(3))).plus(1.5)
+        return eff1
     },
     chargefactor(){
         let progress=player.f.cmpoints.max(1).log10().div(player.f.cmreq.log10())
         let scal2=new Decimal(25)
         if(hasUpgrade("f",94)) scal2=scal2.minus(upgradeEffect("f",94))
+        if(hasUpgrade("f",103)) scal2=scal2.minus(3)
         if(progress.gte(1)){
+            if(inChallenge("f",42)) player.points=new Decimal(0)
             player.f.cmlevel=player.f.cmlevel.plus(1)
             player.f.cmpoints=new Decimal(0)
         }
-        player.f.cmreq=scal2.pow(new Decimal(25).pow(player.f.cmlevel.div(6)).log10()).pow(1.5).plus(25)
+        player.f.cmreq=scal2.pow(new Decimal(25).pow(player.f.cmlevel.div(inChallenge("f",42)? 8 : 6)).log10()).pow(1.5).plus(25).times(hasAchievement("a",65) ? 0.95 : 1)
         return format(progress.times(100))+"%"
     },
+    effofcm(){
+        let eff2=new Decimal(1.8)
+        if(hasChallenge("f",41)) eff2=eff2.plus(0.1)
+        if(player.f.ftype>=2) eff2=eff2.plus(0.1)
+        if(inChallenge("f",42)) eff2=player.f.cmlevel.div(7-(player.f.cmlevel.div(3).min(5))).plus(1.8)
+        return eff2
+    },
     upgrades:{
+        col:5,
         11:{
             title:"I",
             description(){return "Generate 1.1 points per second."},
@@ -665,7 +718,7 @@ addLayer("f", {
             },
             canAfford(){return player.points.gte(400)},
             pay(){return player.points=player.points.minus(400)},
-            effect(){return player.f.adder.add(1).log10().add(1).pow(player.f.multiplier.add(1).log10()).add(1).log(player.f.y.pow(0.6))},
+            effect(){return player.f.adder.add(1).log10().add(1).pow(player.f.multiplier.add(1).log10()).add(1).log(player.f.y.pow(0.6)).min(10)},
             effectDisplay(){return `-${format(upgradeEffect("f",94))}`},
         },
         95:{
@@ -677,6 +730,58 @@ addLayer("f", {
             },
             canAfford(){return player.points.gte(500)},
             pay(){return player.points=player.points.minus(500)},
+        },
+        101:{
+            title:"XXI",
+            description(){return "Increase the effect exp. of charging adder by 0.1."},
+            cost(){return new Decimal(300)},
+            unlocked(){ 
+                return challengeCompletions("f",32)>0&&player.f.ftype==1
+            },
+            canAfford(){return player.points.gte(300)},
+            pay(){return player.points=player.points.minus(300)},
+        },
+        102:{
+            title:"XXII",
+            description(){return "Add a number to x based on the level of factor charger."},
+            cost(){return new Decimal(370)},
+            unlocked(){ 
+                return hasUpgrade("f",101)&&player.f.ftype==1
+            },
+            canAfford(){return player.points.gte(370)},
+            pay(){return player.points=player.points.minus(370)},
+            effect(){return player.f.cmlevel.pow(2).div(1.5)},
+            effectDisplay(){return `+${format(upgradeEffect("f",102))}`},
+        },
+        103:{
+            title:"XXIII",
+            description(){return "Reduce the cost exp. of charging factor by 3."},
+            cost(){return new Decimal(450)},
+            unlocked(){ 
+                return hasUpgrade("f",102)&&player.f.ftype==1
+            },
+            canAfford(){return player.points.gte(450)},
+            pay(){return player.points=player.points.minus(450)},
+        },
+        104:{
+            title:"XXIV",
+            description(){return "The adder of x is 5 times larger."},
+            cost(){return new Decimal(510)},
+            unlocked(){ 
+                return hasUpgrade("f",103)&&player.f.ftype==1
+            },
+            canAfford(){return player.points.gte(510)},
+            pay(){return player.points=player.points.minus(510)},
+        },
+        105:{
+            title:"XXV",
+            description(){return "Unlock a new challenge."},
+            cost(){return new Decimal(700)},
+            unlocked(){ 
+                return hasUpgrade("f",103)&&player.f.ftype==1
+            },
+            canAfford(){return player.points.gte(700)},
+            pay(){return player.points=player.points.minus(700)},
         },
     },
     clickables:{
@@ -695,7 +800,7 @@ addLayer("f", {
                 player.points=new Decimal(1)
                 player.f.upgrades=[]
             },
-            canClick(){return hasUpgrade("f",23)||player.f.isSacrifice}
+            canClick(){return(hasUpgrade("f",23)||player.f.isSacrifice)&&!inChallenge("f",42)}
         },
         12:{
             title(){return "Upgrade your function"},
@@ -707,11 +812,22 @@ addLayer("f", {
                     All the slog chanllenges will be kept.
                     `
                 }
+                if (player.f.ftype==1){
+                    return `Reset all the progress but level up the function by 1.
+                    All upgrades will be removed.
+                    The formula of point gain will be log10(x).
+                    Add 0.1 to the effect of chargers.
+                    Remove logγ 11 and 12.
+                    `
+                }
             },
             style:{"height":"300px","width":"300px","background-color":"#000000","border-radius":"0%","border-color":"white","border":"6px solid","color":"white","text-shadow":"0 0 15px white","font-size":"15px","font-family":""},
             unlocked(){
                 if(player.f.ftype==0){
                     return hasChallenge("f",22)
+                }
+                if(player.f.ftype==1){
+                    return hasChallenge("f",42)
                 }
             },
             onClick(){
@@ -721,8 +837,12 @@ addLayer("f", {
                 player.f.adder=new Decimal(0)
                 player.f.multiplier=new Decimal(1)
                 player.f.exp=new Decimal(1)
+                player.f.calevel=new Decimal(0)
+                player.f.capoints=new Decimal(0)
+                player.f.cmlevel=new Decimal(0)
+                player.f.cmpoints=new Decimal(0)
             },
-            canClick(){return hasUpgrade("f",23)||player.f.isSacrifice}
+            canClick(){return true}
         },
         21:{
             title(){return "Adder charger"},
@@ -738,7 +858,7 @@ addLayer("f", {
                 player.f.capoints=player.f.capoints.plus(player.points.times(0.1))
                 player.points=player.points.minus(player.points.times(0.1))
             },
-            canClick(){return hasUpgrade("f",75)||player.f.isca}
+            canClick(){return (hasUpgrade("f",75)||player.f.isca)&&!inChallenge("f",22)&&canGenPoints()}
         },
         22:{
             title(){return "Factor charger"},
@@ -754,7 +874,7 @@ addLayer("f", {
                 player.f.cmpoints=player.f.cmpoints.plus(player.points.times(0.1))
                 player.points=player.points.minus(player.points.times(0.1))
             },
-            canClick(){return hasUpgrade("f",85)||player.f.iscm}
+            canClick(){return (hasUpgrade("f",85)||player.f.iscm)&&!inChallenge("f",22)&&canGenPoints()}
         },
     },
     challenges:{
@@ -763,7 +883,7 @@ addLayer("f", {
             challengeDescription:"The factor of x is square-rooted.",
             unlocked(){return hasUpgrade("f",35)||player.f.challengechecker.gte(1)},
             goalDescription(){return "145 points"},
-            style:{"border-radius":"2%","border-color":"rgb(205,125,105)","color":"rgb(205,125,105)","font-size":"18px"},
+            style:{"border-radius":"2%","border-color":"rgb(205,125,105)","font-size":"18px"},
             rewardDescription:"Upgrade XIV grows the factor of x with a multiplier.",
             canComplete(){return player.points.gte(145)},
             marked(){return hasChallenge("f",11)},
@@ -779,7 +899,7 @@ addLayer("f", {
             challengeDescription:"Run 'slog 11' and upgrade XIV is disabled.",
             unlocked(){return hasChallenge("f",11)},
             goalDescription(){return "55 points"},
-            style:{"border-radius":"2%","border-color":"rgb(205,125,105)","color":"rgb(205,125,105)","font-size":"18px"},
+            style:{"border-radius":"2%","border-color":"rgb(205,125,105)","font-size":"18px"},
             rewardDescription:"Sacrifice formula is better and unlock a new upgrade.",
             canComplete(){return player.points.gte(55)},
             marked(){return hasChallenge("f",12)},
@@ -793,7 +913,7 @@ addLayer("f", {
             challengeDescription:"Decrease the base adder of x by 4 per second.",
             unlocked(){return hasUpgrade("f",45)||player.f.challengechecker.gte(2)},
             goalDescription(){return "400 points"},
-            style:{"border-radius":"2%","border-color":"rgb(205,125,105)","color":"rgb(205,125,105)","font-size":"18px"},
+            style:{"border-radius":"2%","border-color":"rgb(205,125,105)","font-size":"18px"},
             rewardDescription:"Add 25 to the base multiplier of x in stage 0.",
             canComplete(){return player.points.gte(400)},
             marked(){return hasChallenge("f",21)},
@@ -828,14 +948,14 @@ addLayer("f", {
             countsAs:[12]
         },
         31:{
-            name() {return`logγ 11 (${challengeCompletions("f",31)}/8)`},
-            challengeDescription() {return`Point gain is divided by (γ^${format((challengeCompletions("f",31)+1)*0.25)}) but the cost of charging adder id massively reduced.`},
-            unlocked(){return hasUpgrade("f",95)||hasChallenge("f",31)},
-            goalDescription(){return  `${format((new Decimal(4).pow(challengeCompletions("f",31)+1)))} points`},
-            style:{"border-radius":"2%","border-color":"rgb(165,165,0)","color":"rgb(165,165,0)","font-size":"18px"},
+            name() {return`logγ 11 (${challengeCompletions("f",31)}/3)`},
+            challengeDescription() {return`Point gain is divided by (γ^${format((challengeCompletions("f",31)+1)*0.25)}) but the cost of charging adder is massively reduced.(Entering or exiting this will reset the level of adder charger)`},
+            unlocked(){return (hasUpgrade("f",95)||challengeCompletions("f",31)>0)&&player.f.ftype==1},
+            goalDescription(){return  `${format((new Decimal(4).pow(challengeCompletions("f",31)+1).div(challengeCompletions("f",31)*2)))} points`},
+            style:{"border-radius":"2%","border-color":"orange","font-size":"17px"},
             rewardDescription:"Reduce the cost exp. of charging adder by 0.5 for each completions.",
-            canComplete(){return player.points.gte((new Decimal(4).pow(challengeCompletions("f",31)+1)))},
-            marked(){return challengeCompletions("f",31)==8},
+            canComplete(){return player.points.gte((new Decimal(4).pow(challengeCompletions("f",31)+1).div(challengeCompletions("f",31)+1).div(challengeCompletions("f",31)*2)))},
+            marked(){return challengeCompletions("f",31)==3},
             onEnter(){
                 player.points=new Decimal(1)
                 player.f.calevel=new Decimal(0)
@@ -851,11 +971,88 @@ addLayer("f", {
                 player.f.calevel=new Decimal(0)
                 player.f.capoints=new Decimal(0)
             },
-            completionLimit:8,
+            completionLimit:3,
             rewardEffect(){return challengeCompletions("f",31)*0.5},
             rewardDisplay(){return `-${format(this.rewardEffect())}`}
+        },    
+        32:{
+            name() {return`logγ 12 (${challengeCompletions("f",32)}/${this.completionLimit()})`},
+            challengeDescription() {return`Add ${challengeCompletions("f",32)*8+8} to γ every 5 ticks.`},
+            unlocked(){return (challengeCompletions("f",31)>0||challengeCompletions("f",32)>0)&&player.f.ftype==1},
+            goalDescription(){return  `${format((new Decimal(100).times(challengeCompletions("f",32)+1)))} points`},
+            style:{"border-radius":"2%","border-color":"orange","font-size":"18px"},
+            rewardDescription:"Reduce γ by 50 for each completions.",
+            canComplete(){return player.points.gte((new Decimal(100).times(challengeCompletions("f",32)+1)))},
+            marked(){return challengeCompletions("f",32)==this.completionLimit()},
+            onEnter(){
+                player.points=new Decimal(1)
+                player.f.log12time=0
+            },
+            onExit(){
+               player.points=new Decimal(1)                
+               player.f.log12time=0
+            },            
+            onComplete(){
+                player.points=new Decimal(1)                
+                player.f.log12time=0
+            },
+            completionLimit(){return hasChallenge("f",41) ? 12 : 8},
+            rewardEffect(){return challengeCompletions("f",32)*50},
+            rewardDisplay(){return `-${format(this.rewardEffect())}`}
+        },
+        41:{
+            name() {return`logγ 21`},
+            challengeDescription() {return`The base adder and factor of x is always 1. Next challenge unlocks at 3 completions of logγ11 and this challenge completed.`},
+            unlocked(){return hasUpgrade("f",105)||hasChallenge("f",41)},
+            goalDescription(){return  `500 points`},
+            style:{"border-radius":"2%","border-color":"orange","font-size":"16px"},
+            rewardDescription:"The adder of x is raised to ^1.5 in stage 1 and add 0.1 to the effect of charging factor.Increase the max completion of logγ12 by 4",
+            canComplete(){return player.points.gte(500)},
+            marked(){return hasChallenge("f",41)},
+            onEnter(){
+                player.points=new Decimal(1)
+            },
+            onExit(){
+               player.points=new Decimal(1)                
+            },            
+            onComplete(){
+                player.points=new Decimal(1)                
+            },
+        },
+        42:{
+            name() {return`logγ final`},
+            challengeDescription() {return`Run "logγ 21".Charging adder or factor will reset your points but their effect are growing exponentally and their prices are reduced,too.(Entering or exiting this will reset the level of chargers,sacrifice is disabled.)`},
+            unlocked(){return (hasChallenge("f",41)&&challengeCompletions("f",31)==3)||hasChallenge("f",42)},
+            goalDescription(){return  `20,240 points(Most points you can get in this Challenge)`},
+            style:{"border-radius":"2%","border-color":"orange","font-size":"16px","background":"radial-gradient(rgba(255,0,0,0.7),rgba(255,165,0,0.7),rgba(255,255,0,0.7),rgba(0,255,0,0.7),rgba(0,255,255,0.7),rgba(0,0,255,0.7),rgba(140,0,255,0.7))","color":"rgb(0,0,0)"},
+            rewardDescription:"You can upgrade your function",
+            canComplete(){return player.points.gte(20240)},
+            marked(){return hasChallenge("f",42)},
+            onEnter(){
+                player.points=new Decimal(1)
+                player.f.calevel=new Decimal(0)
+                player.f.capoints=new Decimal(0)
+                player.f.cmlevel=new Decimal(0)
+                player.f.cmpoints=new Decimal(0)
+            },
+            onExit(){
+                player.points=new Decimal(1)
+                player.f.calevel=new Decimal(0)
+                player.f.capoints=new Decimal(0)
+                player.f.cmlevel=new Decimal(0)
+                player.f.cmpoints=new Decimal(0)               
+            },            
+            onComplete(){
+                player.points=new Decimal(1)
+                player.f.calevel=new Decimal(0)
+                player.f.capoints=new Decimal(0)
+                player.f.cmlevel=new Decimal(0)
+                player.f.cmpoints=new Decimal(0)               
+            },
+            countsAs:[41]
         },
     },
+
 })
 addLayer("a", {
     startData() { return {
@@ -978,7 +1175,7 @@ addLayer("a", {
             name: "Gamma rays",
             style:{"border-radius":"0%"},
             done() {return player.f.y.lt(1000) },
-            tooltip: "Make γ lesser than 1000.",
+            tooltip: "Make γ less than 1000.",
         },
         43: {
             name: "Shall we sacrifice?",
@@ -1001,13 +1198,78 @@ addLayer("a", {
             Y2hhcmdpbmcgYWRkZXIu
             reward: Reduce the cost of charging adder a bit.`,
         },
+        51: {
+            name: "Wait,is it nerfed?",
+            style:{"border-radius":"0%"},
+            done() {return player.f.cmpoints.gt(0) },
+            tooltip: "Charge your factor.",
+        },
+        52: {
+            name: "Of course it is.",
+            style:{"border-radius":"0%"},
+            done() {return player.f.calevel.gte(5) },
+            tooltip: "Charge your adder to level 5.",
+        },
+        53: {
+            name: "Gamma radio",
+            style:{"border-radius":"0%"},
+            done() {return player.f.y.lte(800) },
+            tooltip: "Make γ less than 800.",
+        },
+        54: {
+            name: "Three in a row",
+            style:{"border-radius":"0%"},
+            done() {return challengeCompletions("f",31)>=1 },
+            tooltip: "Complete logγ 11 for the first time.",
+        },
+        55: {
+            name: `SA==`,
+            style:{"border-radius":"0%","border-color":"orange"},
+            done() {return inChallenge("f",22)&&player.f.ftype==1&&tmp.f.clickables[21].unlocked},
+            tooltip: `RmluZCBhIHBsYWNlIHdoZ
+            XJlIHlvdSBjYW4ndCBj
+            aGFyZ2Uu
+            reward: The factor of x is raised to ^1.05 in stage 1.`,
+        },
+        61: {
+            name: "Eight in a row.",
+            style:{"border-radius":"0%"},
+            done() {return challengeCompletions("f",32)>=8 },
+            tooltip: "Complete logγ 12 for 8 times.",
+        },
+        62: {
+            name: "Where is my infinite?",
+            style:{"border-radius":"0%"},
+            done() {return player.f.y.lt(308) },
+            tooltip: "Make γ less than 308.",
+        },
+        63: {
+            name: "What a timewall.",
+            style:{"border-radius":"0%"},
+            done() {return challengeCompletions("f",31)>=3 },
+            tooltip: "Complete logγ 11 for 3 times.",
+        },
+        64: {
+            name: "Happy new year.",
+            style:{"border-radius":"0%"},
+            done() {return inChallenge("f",42) },
+            tooltip: "Entering logγ final.",
+        },
+        65: {
+            name: `SQ==`,
+            style:{"border-radius":"0%","border-color":"orange"},
+            done() {return player.f.y.gte(100000)},
+            tooltip: `TWFrZSDOsyBiaWdnZXI
+            gdGhhbiAxMDAwMDA=
+            reward: Reduce the cost of charging factor a bit.`,
+        },
         update(diff) {	// Added this section to call adjustNotificationTime every tick, to reduce notification timers
             adjustNotificationTime(diff);
         },
     },
     tabFormat: [
         "blank", 
-        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/20" }], 
+        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/30" }], 
         ["display-text", function() { return`Achievements on the last column are chanllenging, complete them to get a bonus!(Maybe you can do them later)` }], 
         "blank", "blank","blank","blank",
         "achievements",
