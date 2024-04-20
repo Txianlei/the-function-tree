@@ -50,7 +50,7 @@ addLayer("f", {
                 {"font-size":"25px"}],
                 ["display-text",
                 function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
-                { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(200,100,120)" }]
+                { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(200,100,120)" }],
                 ["display-text",
                 function() { return `You have ${format(player.points)} points.`},
                 { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(200,100,120)" }],
