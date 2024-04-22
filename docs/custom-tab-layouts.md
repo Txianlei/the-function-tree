@@ -1,4 +1,4 @@
-# Custom tab layouts
+ # Custom tab layouts
 
 Note: If you are using subtabs, `tabFormat` is used differently, but the same format is used for defining their layouts. [See here for more on subtabs](subtabs-and-microtabs.md).
 

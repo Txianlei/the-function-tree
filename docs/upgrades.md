@@ -51,7 +51,7 @@ Individual upgrades can have these features:
 
 By default, upgrades use the main prestige currency for the layer. You can include these to change them (but it needs to be a Decimal):
 
-- currencyDisplayName: **optional**. The name to display for the currency for the upgrade.
+- : **optional**. The name to display for the currency for the upgrade.
 
 - currencyInternalName: **optional**. The internal name for that currency.
 
