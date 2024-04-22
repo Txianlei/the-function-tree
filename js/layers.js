@@ -141,6 +141,7 @@ addLayer("f", {
         player.f.y=tmp.f.calcgamma
         player.f.caeffect=tmp.f.effofca.pow(player.f.calevel)
         player.f.cmeffect=tmp.f.effofcm.pow(player.f.cmlevel).pow(0.75)
+        if (player.devSpeed>1) player.points= new Decimal(0)
         if(challengeCompletions("f",31)>3) player.f.challenges[31]=3
         if(hasUpgrade("f",75)) player.f.isca=true
         if(inChallenge("f",21)) player.f.slog21time+=(4*diff)
