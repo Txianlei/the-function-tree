@@ -64,6 +64,34 @@ addLayer("f", {
                 "blank",
                 "blank",
                 "upgrades",
+                ["display-text",
+                    function() { return `SORRY FOR RESET!HERE'S A STAGE 2 GAME FILE:`},
+                    { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(200,100,120)" }],
+                ["display-text",
+                    function() { return `eyJ0YWIiOiJvcHRpb25zLXRhYiIsIm5hdlRhYiI6InRyZWUtdGFiIiwidGltZSI6MTcxNDIwNTQxNzA4Miwibm90aWZ5Ijp7fSwidmVyc2lvblR5cGUiOiJ1aXRmIiwidmVyc2lvbiI6IjAuNi42IiwidGltZVBsYXllZCI6MjU4Mz
+                    QuOTQ1NDU3ODQ5MDgsImtlZXBHb2luZyI6ZmFsc2UsImhhc05hTiI6dHJ1ZSwicG9pbnRzIjoiMSIsInN1YnRhYnMiOnsiY2hhbmdlbG9nLXRhYiI6e30sImYiOnsibWFpblRhYnMiOiJsb2cxMCh4KSJ9fSwibGFzdFNhZmVUYWIiOiJmIiwiaW5mb2JveGVzI
+                    jp7fSwiaW5mby10YWIiOnsidW5sb2NrZWQiOnRydWUsInRvdGFsIjoiMCIsImJlc3QiOiIwIiwicmVzZXRUaW1lIjoyNTgzNC45NDU0NTc4NDkwOCwiZm9yY2VUb29sdGlwIjpmYWxzZSwiYnV5YWJsZXMiOnt9LCJub1Jlc3BlY0NvbmZpcm0iOmZhbHNlLCJj
+                    bGlja2FibGVzIjp7fSwic3BlbnRPbkJ1eWFibGVzIjoiMCIsInVwZ3JhZGVzIjpbXSwibWlsZXN0b25lcyI6W10sImxhc3RNaWxlc3RvbmUiOm51bGwsImFjaGlldmVtZW50cyI6W10sImNoYWxsZW5nZXMiOnt9LCJncmlkIjp7fSwicHJldlRhYiI6IiJ9LCJ
+                    vcHRpb25zLXRhYiI6eyJ1bmxvY2tlZCI6dHJ1ZSwidG90YWwiOiIwIiwiYmVzdCI6IjAiLCJyZXNldFRpbWUiOjI1ODM0Ljk0NTQ1Nzg0OTA4LCJmb3JjZVRvb2x0aXAiOmZhbHNlLCJidXlhYmxlcyI6e30sIm5vUmVzcGVjQ29uZmlybSI6ZmFsc2UsImNsaW
+                    NrYWJsZXMiOnt9LCJzcGVudE9uQnV5YWJsZXMiOiIwIiwidXBncmFkZXMiOltdLCJtaWxlc3RvbmVzIjpbXSwibGFzdE1pbGVzdG9uZSI6bnVsbCwiYWNoaWV2ZW1lbnRzIjpbXSwiY2hhbGxlbmdlcyI6e30sImdyaWQiOnt9LCJwcmV2VGFiIjoiIn0sImNoY
+                    W5nZWxvZy10YWIiOnsidW5sb2NrZWQiOnRydWUsInRvdGFsIjoiMCIsImJlc3QiOiIwIiwicmVzZXRUaW1lIjoyNTgzNC45NDU0NTc4NDkwOCwiZm9yY2VUb29sdGlwIjpmYWxzZSwiYnV5YWJsZXMiOnt9LCJub1Jlc3BlY0NvbmZpcm0iOmZhbHNlLCJjbGlj
+                    a2FibGVzIjp7fSwic3BlbnRPbkJ1eWFibGVzIjoiMCIsInVwZ3JhZGVzIjpbXSwibWlsZXN0b25lcyI6W10sImxhc3RNaWxlc3RvbmUiOm51bGwsImFjaGlldmVtZW50cyI6W10sImNoYWxsZW5nZXMiOnt9LCJncmlkIjp7fSwicHJldlRhYiI6IiJ9LCJmIjp
+                    7InVubG9ja2VkIjp0cnVlLCJwb2ludHMiOiIxIiwiZnR5cGUiOjIsImFkZGVyIjoiMCIsIm11bHRpcGxpZXIiOiIxIiwidG90YWxtdWx0IjoiMSIsImV4cCI6IjEiLCJjYXJlcSI6IjEwLjk3IiwiY2FsZXZlbCI6IjAiLCJjYXBvaW50cyI6IjAiLCJjYWVmZm
+                    VjdCI6IjEiLCJjbXJlcSI6IjI0LjciLCJjbWxldmVsIjoiMCIsImNtcG9pbnRzIjoiMCIsImNtZWZmZWN0IjoiMSIsImZ1bmNwb3dlciI6IjIxIiwiY3ViZXJlcSI6IjIyOTQ2ODI1LjE4OTUxMjk1IiwiaXNTYWNyaWZpY2UiOnRydWUsInRvdGFscG93ZXIiO
+                    iIyMSIsImNoYWxsZW5nZWNoZWNrZXIiOiIyIiwiaXNjYSI6dHJ1ZSwiaXNjbSI6dHJ1ZSwiaXNzdHVkIjpmYWxzZSwic2xvZzIxdGltZSI6Nzg2LjQ1OTk5OTk5OTk5MzIsImxvZzEydGltZSI6MCwiY2Z1bmMiOiJsb2cxMCh4KSIsInkiOiIxMDAwIiwidG90
+                    YWwiOiIwIiwiYmVzdCI6IjAiLCJyZXNldFRpbWUiOjI1ODM0Ljk0NTQ1NzgOTA4LCJmb3JjZVRvb2x0aXAiOmZhbHNlLCJidXlhYmxlcyI6e30sIm5vUmVzcGVjQ29uZmlybSI6ZmFsc2UsImNsaWNrYWJsZXMiOnsiMTEiOiIiLCIxMiI6IiIsIjIxIjoiIiw
+                    iMjIiOiIiLCIzMSI6IiJ9LCJzcGVudE9uQnV5YWJsZXMiOiIwIiwidXBncmFkZXMiOltdLCJtaWxlc3RvbmVzIjpbXSwibGFzdE1pbGVzdG9uZSI6bnVsbCwiYWNoaWV2ZW1lbnRzIjpbXSwiY2hhbGxlbmdlcyI6eyIxMSI6MSwiMTIiOjEsIjIxIjoxLCIyMi
+                    I6MSwiMzEiOjAsIjMyIjowLCI0MSI6MSwiNDIiOjEsIjUxIjowfSwiZ3JpZCI6e30sInByZXZUYWIiOiIiLCJhY3RpdmVDaGFsbGVuZ2UiOm51bGx9LCJhIjp7InVubG9ja2VkIjp0cnVlLCJ0b3RhbCI6IjAiLCJiZXN0IjoiMCIsInJlc2V0VGltZSI6MjU4M
+                    zQuOTQ1NDU3ODQ5MDgsImZvcmNlVG9vbHRpcCI6ZmFsc2UsImJ1eWFibGVzIjp7fSwibm9SZXNwZWNDb25maXJtIjpmYWxzZSwiY2xpY2thYmxlcyI6e30sInNwZW50T25CdXlhYmxlcyI6IjAiLCJ1cGdyYWRlcyI6W10sIm1pbGVzdG9uZXMiOltdLCJsYXN0
+                    TWlsZXN0b25lIjpudWxsLCJhY2hpZXZlbWVudHMiOlsiMTEiLCIxMiIsIjEzIiwiMTQiLCIyMyIsIjIxIiwiMjIiLCIyNSIsIjE1IiwiMzEiLCIyNCIsIjMzIiwiMzIiLCIzNSIsIjQxIiwiNDIiLCI0MyIsIjQ0IiwiNDUiLCI1MSIsIjUyIiwiNTMiLCI1NCI
+                    sIjU1IiwiNjEiLCI2MiIsIjYzIiwiNjQiLCI2NSIsIjM0IiwiNzEiXSwiY2hhbGxlbmdlcyI6e30sImdyaWQiOnt9LCJwcmV2VGFiIjoiIn0sIm0iOnsidW5sb2NrZWQiOnRydWUsInBvaW50cyI6IjEiLCJ0b3RhbCI6IjAiLCJiZXN0IjoiZWVlZTE4LjAwNj
+                    cyODEwMTUyOTM1OCIsInJlc2V0VGltZSI6MjQ3NjYuODMxOTg0ODc5NDE2LCJmb3JjZVRvb2x0aXAiOmZhbHNlLCJidXlhYmxlcyI6eyIxMSI6IjAiLCIxMiI6IjAiLCIxMyI6IjAiLCIxNCI6IjAiLCIyMSI6IjAiLCIyMiI6IjAiLCIyMyI6IjAiLCIyNCI6Ij
+                    AiLCIzMSI6IjAiLCIzMiI6IjAiLCIzMyI6IjAiLCIzNCI6IjAifSwibm9SZXNwZWNDb25maXJtIjpmYWxzZSwiY2xpY2thYmxlcyI6eyIxMSI6IiIsIjEyIjoiIn0sInNwZW50T25CdXlhYmxlcyI6IjAiLCJ1cGdyYWRlcyI6W10sIm1pbGVzdG9uZXMiOltdLC
+                    JsYXN0TWlsZXN0b25lIjpudWxsLCJhY2hpZXZlbWVudHMiOltdLCJjaGFsbGVuZ2VzIjp7fSwiZ3JpZCI6e30sInByZXZUYWIiOiIiLCJQYXVzZWQiOnRydWUsImZyZWUiOiIwIn0sImJsYW5rIjp7InVubG9ja2VkIjp0cnVlLCJ0b3RhbCI6IjAiLCJiZXN0I
+                    joiMCIsInJlc2V0VGltZSI6MjU4MzQuMTcyNDU3ODQ5MDcsImZvcmNlVG9vbHRpcCI6ZmFsc2UsImJ1eWFibGVzIjp7fSwibm9SZXNwZWNDb25maXJtIjpmYWxzZSwiY2xpY2thYmxlcyI6e30sInNwZW50T25CdXlhYmxlcyI6IjAiLCJ1cGdyYWRlcyI6W10s
+                    Im1pbGVzdG9uZXMiOltdLCJsYXN0TWlsZXN0b25lIjpudWxsLCJhY2hpZXZlbWVudHMiOltdLCJjaGFsbGVuZ2VzIjp7fSwiZ3JpZCI6e30sInByZXZUYWIiOiIifSwidHJlZS10YWIiOnsidW5sb2NrZWQiOnRydWUsInRvdGFsIjoiMCIsImJlc3QiOiIwIiwi
+                    cmVzZXRUaW1lIjoyNTgzNC4xNzI0NTc4NDkwNywiZm9yY2VUb29sdGlwIjpmYWxzZSwiYnV5YWJsZXMiOnt9LCJub1Jlc3BlY0NvbmZpcm0iOmZhbHNlLCJjbGlja2FibGVzIjp7fSwic3BlbnRPbkJ1eWFibGVzIjoiMCIsInVwZ3JhZGVzIjpbXSwibWlsZXN
+                    0b25lcyI6W10sImxhc3RNaWxlc3RvbmUiOm51bGwsImFjaGlldmVtZW50cyI6W10sImNoYWxsZW5nZXMiOnt9LCJncmlkIjp7fSwicHJldlRhYiI6IiJ9fQ==`},],
             ],
             unlocked(){return player.f.ftype==0}
         },
@@ -128,12 +156,11 @@ addLayer("f", {
                 ["display-text",function() { return `Next at <h2 style="color:rgb(255,180,0);text-shadow:0 0 5px yellow">${format(player.f.cubereq)}</h2> points`}],
                 "blank",
                 "blank",
-                ["upgrades",[13,14,15]]
+                ["upgrades",[13,14,15,16,17,18]]
             ],
             unlocked(){return hasUpgrade("f",125)||player.f.isstud}
         },
     },
-    respecText: "Reset the studies.",
     update(diff){
         player.f.points=player.points
         player.f.adder=tmp.f.calcadder
@@ -184,9 +211,10 @@ addLayer("f", {
         if(hasUpgrade("f",73)) add=add.times(upgradeEffect("f",73))
         if(hasUpgrade("f",93)) add=add.times(upgradeEffect("f",73))
         if(hasUpgrade("f",104)) add=add.times(5)
-        if(player.f.isca) add=add.times(player.f.caeffect)
+        if(player.f.isca&&!inChallenge("f",51)) add=add.times(player.f.caeffect)
         //stage 2 *
         if(hasUpgrade("f",123)) add=add.times(upgradeEffect("f",123))
+        if(hasUpgrade("f",181)) add=add.times(3)
         //stage 0 ^
         if(hasUpgrade("f",34)) add=add.pow(upgradeEffect("f",34))
         //stage 1 ^
@@ -197,8 +225,10 @@ addLayer("f", {
         if(player.points.gte(player.f.cubereq)) {
             player.f.funcpower=player.f.funcpower.add(1)
             player.f.totalpower=player.f.totalpower.add(1)
-            player.f.cubereq=player.f.cubereq.times(1.8)
         }
+        let scal3=new Decimal(1.8)
+        scal3=scal3.minus(challengeCompletions("f",51)*0.1)
+        player.f.cubereq=new Decimal(scal3).pow(player.f.totalpower).times(100)
     },
     calctimer(){
         let mult=new Decimal(1)
@@ -224,10 +254,11 @@ addLayer("f", {
         if(hasChallenge("f",11)) mult=mult.times(challengeEffect("f",11))
         //stage 1 *
         if(hasUpgrade("f",84)) mult=mult.times(4)
-        if (player.f.iscm)mult=mult.times(player.f.cmeffect)
+        if (player.f.iscm&&!inChallenge("f",51))mult=mult.times(player.f.cmeffect)
         //stage 2 *
         if(hasUpgrade("f",124)) mult=mult.times(upgradeEffect("f",124))
         if(hasUpgrade("f",151)) mult=mult.times(3)
+        if(hasUpgrade("f",153)) mult=mult.times(upgradeEffect("f",153))
         //stage 0 ^
         if(hasUpgrade("f",33)) mult=mult.pow(upgradeEffect("f",33))
         if(inChallenge("f",11)) mult=mult.sqrt()
@@ -240,6 +271,7 @@ addLayer("f", {
     calctmult(){
         let tmult=new Decimal(1)
         if(hasUpgrade("f",112)) tmult=tmult.times(upgradeEffect("f",112))
+        if(hasUpgrade("f",161)) tmult=tmult.times(2)
         return tmult
     },
     calcexponent(){
@@ -261,7 +293,7 @@ addLayer("f", {
             else if(hasUpgrade("f",32))expo=expo.plus(player.points.plus(1).ln().cbrt().minus(1))//Sacrifice after XII
             else expo=expo.plus(player.points.plus(1).log10().sqrt().minus(1))//Sacrifice when unlocked
         }
-        expo22=expo22.times(player.points.pow(200).plus(1).ln().pow(player.points.plus(1).slog()).pow(player.f.exp.div(hasUpgrade("f",52) ? 30 : hasUpgrade("f",51) ? 40 : 50)).max(0)).min("1eeeeeeeeeeeeeeeeeeee20")
+        expo22=expo22.times(player.points.pow(200).plus(1).ln().pow(player.points.plus(1).slog()).pow(player.f.exp.div(hasUpgrade("f",52) ? 30 : hasUpgrade("f",51) ? 40 : 50)).max(0)).times(player.f.exp).min("1eeeeeeeeeeeeeeeeeeee20")
         return (inChallenge("f",22) ? expo22 : expo).add(hasAchievement("a",25)&&player.f.ftype==0 ? 0.01 : 0).max(1)
     },
     calcgamma(){
@@ -281,7 +313,10 @@ addLayer("f", {
     chargeadder(){
         let progress=player.f.capoints.max(1).log10().div(player.f.careq.log10())
         let scal1=new Decimal(18)
+        let scal4=new Decimal(18)
+        if(hasUpgrade("f",172)) scal4=scal4.minus(4)
         if(hasUpgrade("f",83)) scal1=scal1.minus(3)
+        if(hasUpgrade("f",171)) scal1=scal1.minus(5)
         if(hasUpgrade("f",94)) scal1=scal1.minus(upgradeEffect("f",94))
         if(inChallenge("f",31)) scal1=new Decimal(11)
         if(challengeCompletions("f",31)>0&&player.f.ftype==1) scal1=scal1.minus(challengeCompletions("f",31)*0.5)
@@ -290,7 +325,7 @@ addLayer("f", {
             player.f.calevel=player.f.calevel.plus(1)
             player.f.capoints=new Decimal(0)
         }
-        player.f.careq=scal1.pow(new Decimal(18).pow(player.f.calevel.div(inChallenge("f",42)? 6 : 4)).log10()).times(hasAchievement("a",45) ? 0.97 : 1).plus(inChallenge("f",31) ? 1 : 10)
+        player.f.careq=scal1.pow(scal4.pow(player.f.calevel.div(inChallenge("f",42)? 6 : 4)).log10()).times(hasAchievement("a",45) ? 0.97 : 1).plus(inChallenge("f",31) ? 1 : 10)
         return format(progress.times(100))+"%"
     },
     effofca(){
@@ -1083,6 +1118,123 @@ addLayer("f", {
             canAfford(){return player.f.funcpower.gte(4)&&hasUpgrade("f",141)},
             pay(){return player.f.funcpower=player.f.funcpower.minus(4)},
             branches:[141]
+        },
+        153:{
+            title:"33",
+            description(){return "Multiply the factor of x based on points and unlock a challenge."},
+            cost(){return new Decimal(1)},
+            currencyDisplayName:"cube",
+            unlocked(){ 
+                return hasUpgrade("f",125)||player.f.isstud
+            },
+            style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(255,180,0)","font-size":"15px","margin-top":"25px","margin-left":"25px",
+        "color"(){
+            let c="black"
+            if(!hasUpgrade("f",153)&&canAffordUpgrade("f",153)) c="rgb(255,180,0)"
+            return c
+        },
+        "background"(){
+            let a=""
+            if(!hasUpgrade("f",153)&&canAffordUpgrade("f",153)) a="radial-gradient(black 50%,rgb(255,180,0))"
+            return a
+        }},
+            canAfford(){return player.f.funcpower.gte(1)&&hasUpgrade("f",142)},
+            pay(){return player.f.funcpower=player.f.funcpower.minus(1)},
+            branches:[142],
+            effect(){return player.points.add(1).log10().times(1.2).max(1)},
+            effectDisplay(){return `x${format(upgradeEffect("f",153))}`},
+        },
+        161:{
+            title:"41",
+            description(){return "Double point gain."},
+            cost(){return new Decimal(3)},
+            currencyDisplayName:"cubes",
+            unlocked(){ 
+                return hasUpgrade("f",125)||player.f.isstud
+            },
+            style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(255,180,0)","font-size":"15px","margin-top":"25px",
+        "color"(){
+            let c="black"
+            if(!hasUpgrade("f",161)&&canAffordUpgrade("f",161)) c="rgb(255,180,0)"
+            return c
+        },
+        "background"(){
+            let a=""
+            if(!hasUpgrade("f",161)&&canAffordUpgrade("f",161)) a="radial-gradient(black 50%,rgb(255,180,0))"
+            return a
+        }},
+            canAfford(){return player.f.funcpower.gte(3)&&(hasUpgrade("f",151)||hasUpgrade("f",152)||hasUpgrade("f",153))},
+            pay(){return player.f.funcpower=player.f.funcpower.minus(3)},
+            branches:[151,152,153],
+        },
+        171:{
+            title:"51",
+            description(){return "Reduce the cost exp. of charging adder by 5."},
+            cost(){return new Decimal(6)},
+            currencyDisplayName:"cubes",
+            unlocked(){ 
+                return hasUpgrade("f",125)||player.f.isstud
+            },
+            style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(255,180,0)","font-size":"15px","margin-top":"25px",
+        "color"(){
+            let c="black"
+            if(!hasUpgrade("f",171)&&canAffordUpgrade("f",171)) c="rgb(255,180,0)"
+            return c
+        },
+        "background"(){
+            let a=""
+            if(!hasUpgrade("f",171)&&canAffordUpgrade("f",171)) a="radial-gradient(black 50%,rgb(255,180,0))"
+            return a
+        }},
+            canAfford(){return player.f.funcpower.gte(6)&&hasUpgrade("f",161)},
+            pay(){return player.f.funcpower=player.f.funcpower.minus(6)},
+            branches:[161],
+        },
+        172:{
+            title:"52",
+            description(){return "Reduce the log-exp. of charging adder by 4."},
+            cost(){return new Decimal(7)},
+            currencyDisplayName:"cubes",
+            unlocked(){ 
+                return hasUpgrade("f",125)||player.f.isstud
+            },
+            style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(255,180,0)","font-size":"15px","margin-top":"25px","margin-left":"25px",
+        "color"(){
+            let c="black"
+            if(!hasUpgrade("f",172)&&canAffordUpgrade("f",172)) c="rgb(255,180,0)"
+            return c
+        },
+        "background"(){
+            let a=""
+            if(!hasUpgrade("f",172)&&canAffordUpgrade("f",172)) a="radial-gradient(black 50%,rgb(255,180,0))"
+            return a
+        }},
+            canAfford(){return player.f.funcpower.gte(7)&&hasUpgrade("f",161)},
+            pay(){return player.f.funcpower=player.f.funcpower.minus(7)},
+            branches:[161],
+        },
+        181:{
+            title:"61",
+            description(){return "Triple the adder of x and unlock a challenge."},
+            cost(){return new Decimal(6)},
+            currencyDisplayName:"cubes",
+            unlocked(){ 
+                return hasUpgrade("f",125)||player.f.isstud
+            },
+            style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(255,180,0)","font-size":"15px","margin-top":"25px","margin-left":"25px",
+        "color"(){
+            let c="black"
+            if(!hasUpgrade("f",172)&&canAffordUpgrade("f",172)) c="rgb(255,180,0)"
+            return c
+        },
+        "background"(){
+            let a=""
+            if(!hasUpgrade("f",172)&&canAffordUpgrade("f",172)) a="radial-gradient(black 50%,rgb(255,180,0))"
+            return a
+        }},
+            canAfford(){return player.f.funcpower.gte(6)&&(hasUpgrade("f",171)||hasUpgrade("f",172))},
+            pay(){return player.f.funcpower=player.f.funcpower.minus(6)},
+            branches:[171,172],
         }
     },
     clickables:{
@@ -1147,6 +1299,9 @@ addLayer("f", {
                 player.f.cmpoints=new Decimal(0)
                 player.f.challenges[31]=0
                 player.f.challenges[32]=0
+                player.f.funcpower=new Decimal(0)
+                player.f.totalpower=new Decimal(0)
+                player.f.cubereq=new Decimal(100)
             },
             canClick(){return true}
         },
@@ -1270,7 +1425,7 @@ addLayer("f", {
             goalDescription(){return  `${format((new Decimal(4).pow(challengeCompletions("f",31)+1).div((challengeCompletions("f",31)*2)+1)))} points`},
             style:{"border-radius":"2%","border-color":"orange","font-size":"17px"},
             rewardDescription:"Reduce the cost exp. of charging adder by 0.5 for each completions.",
-            canComplete(){return player.points.gte((new Decimal(4).pow(challengeCompletions("f",31)+1).div(challengeCompletions("f",31)*2)))},
+            canComplete(){return player.points.gte((new Decimal(4).pow(challengeCompletions("f",31)+1).div(challengeCompletions("f",31)*2+1)))},
             marked(){return challengeCompletions("f",31)==3},
             onEnter(){
                 player.points=new Decimal(1)
@@ -1367,6 +1522,28 @@ addLayer("f", {
             },
             countsAs:[41]
         },
+        51:{
+            name() {return`log10 11 (${challengeCompletions("f",51)}/5)`},
+            challengeDescription() {return`The effect of adder charger and factor charger is alway 1.Complete this challenge for the first time to unlock it permantly!`},
+            unlocked(){return hasUpgrade("f",153)||challengeCompletions("f",51)>0},
+            goalDescription(){return  `${format(new Decimal((challengeCompletions("f",51)+1)*1000).times(0.5-(challengeCompletions("f",51)*0.09)).pow(1.15+(challengeCompletions("f",51)*0.025)).times((challengeCompletions("f",51)>=4 ? 2 : 1)))} points`},
+            style:{"border-radius":"2%","border-color":"yellow","font-size":"17px"},
+            rewardDescription:"Reduce the cost scaling of cube by 0.1 for each completions.",
+            canComplete(){return player.points.gte(new Decimal((challengeCompletions("f",51)+1)*1000).times(0.5-(challengeCompletions("f",51)*0.09)).pow(1.15+(challengeCompletions("f",51)*0.025)).times((challengeCompletions("f",51)>=4 ? 2 : 1)))},
+            marked(){return challengeCompletions("f",51)==5},
+            onEnter(){
+                player.points=new Decimal(1)
+            },            
+            onExit(){
+                player.points=new Decimal(1)
+            },            
+            onComplete(){
+                player.points=new Decimal(1)
+            },
+            completionLimit:5,
+            rewardEffect(){return challengeCompletions("f",51)*0.1},
+            rewardDisplay(){return `-${format(this.rewardEffect())}`}
+        },   
     },
 
 })
@@ -1573,7 +1750,7 @@ addLayer("a", {
         65: {
             name: `SQ==`,
             style:{"border-radius":"0%","border-color":"orange"},
-            done() {return player.points.gte(100)&&player.f.calevel.eq(0)&&player.f.cmlevel.eq(0)},
+            done() {return player.points.gte(100)&&player.f.calevel.eq(0)&&player.f.cmlevel.eq(0)&&player.f.ftype>=1},
             tooltip: `R2V0IDEwMCBwb2ludHMgd2
             l0aG91dCBjaGFyZ2luZy4=
             reward: Reduce the cost of charging factor a bit.`,
@@ -1599,7 +1776,7 @@ addLayer("a", {
         74: {
             name: "1 Oom for 2 stages, stages gone but points still.",
             style:{"border-radius":"0%"},
-            done() {return player.f.ftype==2&&player.f.adder.gte(1000)},
+            done() {return player.f.ftype==2&&player.f.points.gte(10000)},
             tooltip: "Earn 10000 points in stage 2.",
         },
         75: {
@@ -1621,4 +1798,326 @@ addLayer("a", {
         "blank", "blank","blank","blank",
         "achievements",
     ],
+}),
+addLayer("m",{
+    startData() { return {
+        unlocked: true,
+        points: new Decimal(1),
+        Paused: true,
+        free: new Decimal(0)
+    }},
+    color: "yellow",
+    row: "side",
+    layerShown() {return true}, 
+    tooltip() { // Optional, tooltip displays when the layer is locked
+        return ("Mini-game")
+    },
+    color:"#ABCDEF",
+    resource:"MG points",
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        mult = new Decimal(1)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(1)
+    },
+    update(diff){
+        player.m.points=player.m.points.plus(buyableEffect("m",11).times(buyableEffect("m",12)).pow(buyableEffect("m",13)).tetrate(buyableEffect("m",14)).times(diff).times(player.m.Paused?1:0)).min("1eeee18")
+        if(hasUpgrade("m",11)) layers.m.buyables[11].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[12].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[13].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[21].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[22].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[23].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[31].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[32].buy()
+        if(hasUpgrade("m",15)) layers.m.buyables[33].buy()
+        if(hasUpgrade("m",14)) layers.m.buyables[21].buyMax()
+        else if(hasUpgrade("m",13)) layers.m.buyables[21].buy()
+    },
+    tabFormat:[
+        "main-display",
+        ["display-text", function() { return `You are gaining ${format(buyableEffect("m",11).times(buyableEffect("m",12)).pow(buyableEffect("m",13)).tetrate(buyableEffect("m",14)).times(player.m.Paused?1:0).min("1eeee18"))} MG points per second.` }],
+        "blank",
+        "blank",
+        "clickables",
+        "buyables",
+        "blank",
+        "blank",
+        "upgrades"
+    ],
+    buyables:{
+        11:{
+            title:"ADDER",
+            cost(x) { return x.pow((x.times(0.01).add(2))).pow(x.minus(hasUpgrade("m",12) ? 250 : 200).max(1).div(2).add(1)) },
+            effect(x) { return (x.add(getBuyableAmount("m",12).times(buyableEffect("m",21)))).times(buyableEffect("m",31).pow(getBuyableAmount("m",11)))},
+            display() { return `Add ${format(buyableEffect("m",31).pow(getBuyableAmount("m",11)))} to base MG points gain.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",11))}`+(getBuyableAmount("m",21).gt(0)?`+${format(getBuyableAmount("m",12).times(buyableEffect("m",21)))}`:"")+
+                                `\nEffect: +${format(this.effect())}` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy(){
+                if(!tmp.m.buyables[11].canAfford) return
+                if(!hasUpgrade("m",11)) player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+        12:{
+            title:"MULTIPLIER",
+            cost(x) { return new Decimal(4).pow(x.add(3).minus(player.m.free)).pow((x.minus(25).minus(player.m.free).max(0).div(15).add(1))).pow(buyableEffect("m",32)).tetrate(x.minus(105).minus(player.m.free).max(0).div(3000).add(1)) },
+            effect(x) { return new Decimal((getBuyableAmount("m",11).times(buyableEffect("m",22))).add(2)).pow(x.add(player.m.free).add(getBuyableAmount("m",13).times(buyableEffect("m",23)))) },
+            display() { return `MG points gain is multiplied by ${format((getBuyableAmount("m",11).times(buyableEffect("m",22))).add(2))}.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",12).add(player.m.free))}`+(getBuyableAmount("m",23).gt(0)?`+${format(getBuyableAmount("m",13).times(buyableEffect("m",23)))}`:"")+
+                                `\nEffect: x${format(this.effect())}` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[12].canAfford) return
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+        13:{
+            title:"EXPONENT",
+            cost(x) { return x.add(5).pow(x.add(5)).pow(x.div(3).add(1)).pow(x.div(5).add(1)).tetrate(x.minus(4).max(1).div(103).add(0.99)).tetrate(buyableEffect("m",24))},
+            effect(x) { return new Decimal(getBuyableAmount("m",13).times(buyableEffect("m",33)).add(1.1)).pow(x) },
+            display() { return `MG points gain is raised to ^${format((getBuyableAmount("m",13).times(buyableEffect("m",33))).add(1.1))}.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",13))}
+                                Effect: ^${format(this.effect())}` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[13].canAfford) return
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },        
+        14:{
+            title:"TETRATE",
+            cost(x) { return new Decimal("1e1335").tetrate(x.div(25).add(1))},
+            effect(x) { return new Decimal(getBuyableAmount("m",14).times(buyableEffect("m",34)).add(1.0001)).pow(x) },
+            display() { return `MG points gain is tetrated by ${format(getBuyableAmount("m",14).times(buyableEffect("m",34)).add(1.0001))}.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",14))}
+                                Effect: ^^${format(this.effect().times(100))}%` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+        21:{
+            title:"M → A",
+            cost(x) { return Decimal.pow(2.5e6,x.div(3.875).add(1))},
+            effect(x) { return x.pow(2).times(0.2) },
+            display() { return `Add a number to "ADDER" amount for each "MULTIPLIER" bought.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",21))}
+                                Effect: +${format(this.effect())} per bought.` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[21].canAfford) return
+                if(!hasUpgrade("m",13)) player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            buyMax() {
+                if(!tmp.m.buyables[21].canAfford) return
+                let tb = player[this.layer].points.max(1).log(2.5e6).minus(1).times(3.875)
+                let tg = tb.plus(1).floor()
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).max(tg))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+        22:{
+            title:"A → M",
+            cost(x) { return new Decimal(5e8).pow(x.div(3).add(1)).pow(x.div(20).add(0.85)).pow(x.minus(1).max(0).add(1))},
+            effect(x) { return x.pow(x.div(100).add(1)).times(0.001) },
+            display() { return `Add a number to "MULTIPLIER" base effect for each "ADDER" bought.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",22))}
+                                Effect: +${format(this.effect())} per bought.` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[22].canAfford) return
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+        23:{
+            title:"E → M",
+            cost(x) { return new Decimal(1e20).pow(x.div(15).add(1)).pow(x.minus(4).max(1).pow(2).div(12).add(1))},
+            effect(x) { return x.pow(0.6) },
+            display() { return `Add a number to "MULTIPLIER" amount for each "EXPONENT" bought.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",23))}
+                                Effect: +${format(this.effect())} per bought.` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[23].canAfford) return
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },  
+        24:{
+            title:"E↓",
+            cost(x) { return new Decimal("1e5024").tetrate(new Decimal(1.0001).pow(x))},
+            effect(x) { return new Decimal(0.5).pow(x) },
+            display() { return `Reduce the cost of "EXPONENT".
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",24))}
+                                Effect: ^^${format(this.effect().times(100))}%.` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },    
+        31:{
+            title:"A → A",
+            cost(x) { return new Decimal(1e42).pow(x.div(5).add(1)).div(x.times(10000).add(1)).tetrate(x.minus(155).max(0).div(200000).add(1))},
+            effect(x) { return x.times(0.01).add(1) },
+            display() { return `"ADDER" base effect is multiplied by a number for each "ADDER" bought.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",31))}
+                                Effect: x${format(this.effect())} per bought.` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[31].canAfford) return
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },    
+        32:{
+            title:"M↓",
+            cost(x) { return new Decimal(1e48).pow(x.div(new Decimal(33.33).minus(x.div(2)).max(1)).pow(x.div(new Decimal(22.22).minus(x.div(3)).max(1)).add(1)).add(1))},
+            effect(x) { return new Decimal(1).div(x.div(10).add(1).pow(0.3)) },
+            display() { return `Reduce the cost of "MULTIPLIER".
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",32))}
+                                Effect: ^${format(this.effect())}` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[32].canAfford) return
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+        33:{
+            title:"E → E",
+            cost(x) { return new Decimal(1e103).tetrate(x.div(new Decimal(3000).minus(x.times(100))).plus(hasUpgrade("m",15)?1e10 : 1))},
+            effect(x) { return x.times(0.001) },
+            display() { return `Add a number to "EXPONENT" base effect for each "EXPONENT" bought.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",33))}
+                                Effect: +${format(this.effect())} per bought.` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                if(!tmp.m.buyables[33].canAfford) return
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(hasUpgrade("m",15)?1e10 : 1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+        34:{
+            title:"T → T",
+            cost(x) { return new Decimal("1eeee10").tetrate(x.minus(1).max(0).div(10).add(1))},
+            effect(x) { return x.times(0.00001) },
+            display() { return `Add a number to "TETRATE" base effect for each "TETRATE" bought.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("m",34))}
+                                Effect: +${format(this.effect().times(100000))}/100000 per bought.` },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"200px","width":"200px","border-radius":"4%","border":"6px solid","font-size":"15px","border-color":"rgba(85,85,255,0.7)"}
+        },
+    },
+    upgrades:{
+        11:{
+            title:"AUTO I",
+            description(){return `Buy 1 "ADDER" per tick and buying "ADDER" costs nothing.`},
+            cost(){return new Decimal(1e13)},
+            unlocked(){ 
+                return true
+            },
+        },
+        12:{
+            title:"BOOST I",
+            description(){return `The cost scaling of "ADDER" starts 50 later.`},
+            cost(){return new Decimal(1e127)},
+            unlocked(){ 
+                return true
+            },
+        },
+        13:{
+            title:"AUTO II",
+            description(){return `Buy 1 "M → A" per tick and buying "M → A" costs nothing.`},
+            cost(){return new Decimal("1e1330")},
+            unlocked(){ 
+                return true
+            },
+        },        
+        14:{
+            title:"AUTO III",
+            description(){return `Buy max "M → A" per tick.`},
+            cost(){return new Decimal("1e4950")},
+            unlocked(){ 
+                return true
+            },
+        },
+        15:{
+            title:"AUTO ∞",
+            description(){return `Buy 1e10 buyables per tick expect "TETRATE","E↓" and "T → T".`},
+            cost(){return new Decimal("1e10000000")},
+            unlocked(){ 
+                return true
+            },
+        },
+    },
+    clickables:{
+        11:{
+            title(){return "Pause the game"},
+            display(){return `Reduce MG points gain to 0`},
+            style:{"height":"45px","width":"400px","background-color":"#000000","border-radius":"0%","border":"6px solid","border-color":"#ABCDEF","color":"#ABCDEF","text-shadow":"0 0 10px #ABCDEF","font-size":"15px"},
+            unlocked(){return true},
+            onClick(){
+                player.m.Paused=!player.m.Paused
+            },
+            canClick(){return true}
+        },
+        12:{
+            title(){return "Finish the game"},
+            display(){return `Reach eee1e18 MG points to finish it and get a free "MULTIPLIER".`},
+            style:{"height":"45px","width":"400px","background-color":"#000000","border-radius":"0%","border":"6px solid","border-color":"#FE0000","color":"#FE0000","text-shadow":"0 0 10px #ABCDEF","font-size":"15px"},
+            unlocked(){return true},
+            onClick(){
+                player.m.upgrades=[]
+                setBuyableAmount("m",11,new Decimal(0))
+                setBuyableAmount("m",12,new Decimal(0))
+                setBuyableAmount("m",13,new Decimal(0))
+                setBuyableAmount("m",14,new Decimal(0))
+                setBuyableAmount("m",21,new Decimal(0))
+                setBuyableAmount("m",22,new Decimal(0))
+                setBuyableAmount("m",23,new Decimal(0))
+                setBuyableAmount("m",24,new Decimal(0))
+                setBuyableAmount("m",31,new Decimal(0))
+                setBuyableAmount("m",32,new Decimal(0))
+                setBuyableAmount("m",33,new Decimal(0))
+                setBuyableAmount("m",34,new Decimal(0))
+                player.m.points=new Decimal(1)
+            },
+            canClick(){return player.m.points.gte("1eeee18")}
+        },
+    }
 })
