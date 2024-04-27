@@ -67,31 +67,6 @@ addLayer("f", {
                 ["display-text",
                     function() { return `SORRY FOR RESET!HERE'S A STAGE 2 GAME FILE:`},
                     { "color": "rgba(245,120,120)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(200,100,120)" }],
-                ["display-text",
-                    function() { return `eyJ0YWIiOiJvcHRpb25zLXRhYiIsIm5hdlRhYiI6InRyZWUtdGFiIiwidGltZSI6MTcxNDIwNTQxNzA4Miwibm90aWZ5Ijp7fSwidmVyc2lvblR5cGUiOiJ1aXRmIiwidmVyc2lvbiI6IjAuNi42IiwidGltZVBsYXllZCI6MjU4Mz
-                    QuOTQ1NDU3ODQ5MDgsImtlZXBHb2luZyI6ZmFsc2UsImhhc05hTiI6dHJ1ZSwicG9pbnRzIjoiMSIsInN1YnRhYnMiOnsiY2hhbmdlbG9nLXRhYiI6e30sImYiOnsibWFpblRhYnMiOiJsb2cxMCh4KSJ9fSwibGFzdFNhZmVUYWIiOiJmIiwiaW5mb2JveGVzI
-                    jp7fSwiaW5mby10YWIiOnsidW5sb2NrZWQiOnRydWUsInRvdGFsIjoiMCIsImJlc3QiOiIwIiwicmVzZXRUaW1lIjoyNTgzNC45NDU0NTc4NDkwOCwiZm9yY2VUb29sdGlwIjpmYWxzZSwiYnV5YWJsZXMiOnt9LCJub1Jlc3BlY0NvbmZpcm0iOmZhbHNlLCJj
-                    bGlja2FibGVzIjp7fSwic3BlbnRPbkJ1eWFibGVzIjoiMCIsInVwZ3JhZGVzIjpbXSwibWlsZXN0b25lcyI6W10sImxhc3RNaWxlc3RvbmUiOm51bGwsImFjaGlldmVtZW50cyI6W10sImNoYWxsZW5nZXMiOnt9LCJncmlkIjp7fSwicHJldlRhYiI6IiJ9LCJ
-                    vcHRpb25zLXRhYiI6eyJ1bmxvY2tlZCI6dHJ1ZSwidG90YWwiOiIwIiwiYmVzdCI6IjAiLCJyZXNldFRpbWUiOjI1ODM0Ljk0NTQ1Nzg0OTA4LCJmb3JjZVRvb2x0aXAiOmZhbHNlLCJidXlhYmxlcyI6e30sIm5vUmVzcGVjQ29uZmlybSI6ZmFsc2UsImNsaW
-                    NrYWJsZXMiOnt9LCJzcGVudE9uQnV5YWJsZXMiOiIwIiwidXBncmFkZXMiOltdLCJtaWxlc3RvbmVzIjpbXSwibGFzdE1pbGVzdG9uZSI6bnVsbCwiYWNoaWV2ZW1lbnRzIjpbXSwiY2hhbGxlbmdlcyI6e30sImdyaWQiOnt9LCJwcmV2VGFiIjoiIn0sImNoY
-                    W5nZWxvZy10YWIiOnsidW5sb2NrZWQiOnRydWUsInRvdGFsIjoiMCIsImJlc3QiOiIwIiwicmVzZXRUaW1lIjoyNTgzNC45NDU0NTc4NDkwOCwiZm9yY2VUb29sdGlwIjpmYWxzZSwiYnV5YWJsZXMiOnt9LCJub1Jlc3BlY0NvbmZpcm0iOmZhbHNlLCJjbGlj
-                    a2FibGVzIjp7fSwic3BlbnRPbkJ1eWFibGVzIjoiMCIsInVwZ3JhZGVzIjpbXSwibWlsZXN0b25lcyI6W10sImxhc3RNaWxlc3RvbmUiOm51bGwsImFjaGlldmVtZW50cyI6W10sImNoYWxsZW5nZXMiOnt9LCJncmlkIjp7fSwicHJldlRhYiI6IiJ9LCJmIjp
-                    7InVubG9ja2VkIjp0cnVlLCJwb2ludHMiOiIxIiwiZnR5cGUiOjIsImFkZGVyIjoiMCIsIm11bHRpcGxpZXIiOiIxIiwidG90YWxtdWx0IjoiMSIsImV4cCI6IjEiLCJjYXJlcSI6IjEwLjk3IiwiY2FsZXZlbCI6IjAiLCJjYXBvaW50cyI6IjAiLCJjYWVmZm
-                    VjdCI6IjEiLCJjbXJlcSI6IjI0LjciLCJjbWxldmVsIjoiMCIsImNtcG9pbnRzIjoiMCIsImNtZWZmZWN0IjoiMSIsImZ1bmNwb3dlciI6IjIxIiwiY3ViZXJlcSI6IjIyOTQ2ODI1LjE4OTUxMjk1IiwiaXNTYWNyaWZpY2UiOnRydWUsInRvdGFscG93ZXIiO
-                    iIyMSIsImNoYWxsZW5nZWNoZWNrZXIiOiIyIiwiaXNjYSI6dHJ1ZSwiaXNjbSI6dHJ1ZSwiaXNzdHVkIjpmYWxzZSwic2xvZzIxdGltZSI6Nzg2LjQ1OTk5OTk5OTk5MzIsImxvZzEydGltZSI6MCwiY2Z1bmMiOiJsb2cxMCh4KSIsInkiOiIxMDAwIiwidG90
-                    YWwiOiIwIiwiYmVzdCI6IjAiLCJyZXNldFRpbWUiOjI1ODM0Ljk0NTQ1NzgOTA4LCJmb3JjZVRvb2x0aXAiOmZhbHNlLCJidXlhYmxlcyI6e30sIm5vUmVzcGVjQ29uZmlybSI6ZmFsc2UsImNsaWNrYWJsZXMiOnsiMTEiOiIiLCIxMiI6IiIsIjIxIjoiIiw
-                    iMjIiOiIiLCIzMSI6IiJ9LCJzcGVudE9uQnV5YWJsZXMiOiIwIiwidXBncmFkZXMiOltdLCJtaWxlc3RvbmVzIjpbXSwibGFzdE1pbGVzdG9uZSI6bnVsbCwiYWNoaWV2ZW1lbnRzIjpbXSwiY2hhbGxlbmdlcyI6eyIxMSI6MSwiMTIiOjEsIjIxIjoxLCIyMi
-                    I6MSwiMzEiOjAsIjMyIjowLCI0MSI6MSwiNDIiOjEsIjUxIjowfSwiZ3JpZCI6e30sInByZXZUYWIiOiIiLCJhY3RpdmVDaGFsbGVuZ2UiOm51bGx9LCJhIjp7InVubG9ja2VkIjp0cnVlLCJ0b3RhbCI6IjAiLCJiZXN0IjoiMCIsInJlc2V0VGltZSI6MjU4M
-                    zQuOTQ1NDU3ODQ5MDgsImZvcmNlVG9vbHRpcCI6ZmFsc2UsImJ1eWFibGVzIjp7fSwibm9SZXNwZWNDb25maXJtIjpmYWxzZSwiY2xpY2thYmxlcyI6e30sInNwZW50T25CdXlhYmxlcyI6IjAiLCJ1cGdyYWRlcyI6W10sIm1pbGVzdG9uZXMiOltdLCJsYXN0
-                    TWlsZXN0b25lIjpudWxsLCJhY2hpZXZlbWVudHMiOlsiMTEiLCIxMiIsIjEzIiwiMTQiLCIyMyIsIjIxIiwiMjIiLCIyNSIsIjE1IiwiMzEiLCIyNCIsIjMzIiwiMzIiLCIzNSIsIjQxIiwiNDIiLCI0MyIsIjQ0IiwiNDUiLCI1MSIsIjUyIiwiNTMiLCI1NCI
-                    sIjU1IiwiNjEiLCI2MiIsIjYzIiwiNjQiLCI2NSIsIjM0IiwiNzEiXSwiY2hhbGxlbmdlcyI6e30sImdyaWQiOnt9LCJwcmV2VGFiIjoiIn0sIm0iOnsidW5sb2NrZWQiOnRydWUsInBvaW50cyI6IjEiLCJ0b3RhbCI6IjAiLCJiZXN0IjoiZWVlZTE4LjAwNj
-                    cyODEwMTUyOTM1OCIsInJlc2V0VGltZSI6MjQ3NjYuODMxOTg0ODc5NDE2LCJmb3JjZVRvb2x0aXAiOmZhbHNlLCJidXlhYmxlcyI6eyIxMSI6IjAiLCIxMiI6IjAiLCIxMyI6IjAiLCIxNCI6IjAiLCIyMSI6IjAiLCIyMiI6IjAiLCIyMyI6IjAiLCIyNCI6Ij
-                    AiLCIzMSI6IjAiLCIzMiI6IjAiLCIzMyI6IjAiLCIzNCI6IjAifSwibm9SZXNwZWNDb25maXJtIjpmYWxzZSwiY2xpY2thYmxlcyI6eyIxMSI6IiIsIjEyIjoiIn0sInNwZW50T25CdXlhYmxlcyI6IjAiLCJ1cGdyYWRlcyI6W10sIm1pbGVzdG9uZXMiOltdLC
-                    JsYXN0TWlsZXN0b25lIjpudWxsLCJhY2hpZXZlbWVudHMiOltdLCJjaGFsbGVuZ2VzIjp7fSwiZ3JpZCI6e30sInByZXZUYWIiOiIiLCJQYXVzZWQiOnRydWUsImZyZWUiOiIwIn0sImJsYW5rIjp7InVubG9ja2VkIjp0cnVlLCJ0b3RhbCI6IjAiLCJiZXN0I
-                    joiMCIsInJlc2V0VGltZSI6MjU4MzQuMTcyNDU3ODQ5MDcsImZvcmNlVG9vbHRpcCI6ZmFsc2UsImJ1eWFibGVzIjp7fSwibm9SZXNwZWNDb25maXJtIjpmYWxzZSwiY2xpY2thYmxlcyI6e30sInNwZW50T25CdXlhYmxlcyI6IjAiLCJ1cGdyYWRlcyI6W10s
-                    Im1pbGVzdG9uZXMiOltdLCJsYXN0TWlsZXN0b25lIjpudWxsLCJhY2hpZXZlbWVudHMiOltdLCJjaGFsbGVuZ2VzIjp7fSwiZ3JpZCI6e30sInByZXZUYWIiOiIifSwidHJlZS10YWIiOnsidW5sb2NrZWQiOnRydWUsInRvdGFsIjoiMCIsImJlc3QiOiIwIiwi
-                    cmVzZXRUaW1lIjoyNTgzNC4xNzI0NTc4NDkwNywiZm9yY2VUb29sdGlwIjpmYWxzZSwiYnV5YWJsZXMiOnt9LCJub1Jlc3BlY0NvbmZpcm0iOmZhbHNlLCJjbGlja2FibGVzIjp7fSwic3BlbnRPbkJ1eWFibGVzIjoiMCIsInVwZ3JhZGVzIjpbXSwibWlsZXN
-                    0b25lcyI6W10sImxhc3RNaWxlc3RvbmUiOm51bGwsImFjaGlldmVtZW50cyI6W10sImNoYWxsZW5nZXMiOnt9LCJncmlkIjp7fSwicHJldlRhYiI6IiJ9fQ==`},],
             ],
             unlocked(){return player.f.ftype==0}
         },
@@ -1224,12 +1199,12 @@ addLayer("f", {
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(255,180,0)","font-size":"15px","margin-top":"25px","margin-left":"25px",
         "color"(){
             let c="black"
-            if(!hasUpgrade("f",172)&&canAffordUpgrade("f",172)) c="rgb(255,180,0)"
+            if(!hasUpgrade("f",181)&&canAffordUpgrade("f",181)) c="rgb(255,180,0)"
             return c
         },
         "background"(){
             let a=""
-            if(!hasUpgrade("f",172)&&canAffordUpgrade("f",172)) a="radial-gradient(black 50%,rgb(255,180,0))"
+            if(!hasUpgrade("f",181)&&canAffordUpgrade("f",181)) a="radial-gradient(black 50%,rgb(255,180,0))"
             return a
         }},
             canAfford(){return player.f.funcpower.gte(6)&&(hasUpgrade("f",171)||hasUpgrade("f",172))},
