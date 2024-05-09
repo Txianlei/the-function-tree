@@ -13,13 +13,19 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.7",
-	name: "stage 3",
+	num: "0.8",
+	name: "Pre-dilation",
 }
 
 let changelog = `
 	<h1><b>Current endgame: Reach stage 3.</h1><br><br>
 	<h1>Changelog:</h1><br><br>
+	<h3>v0.8</h3><br>
+		-Added 15 upgrades.<br>
+		-Added 18 studies.<br>
+		-Added 4 challenges.<br>
+		-Fixed some bugs.<br>
+		-Added 5 achievements.<br><br>
 	<h3>v0.7</h3><br>
 		-Added 10 studies.<br>
 		-Added 2 challenges.<br>
@@ -73,7 +79,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return hasUpgrade("f",11)||hasUpgrade("f",61)||hasUpgrade("f",111)
+	return hasUpgrade("f",11)||hasUpgrade("f",61)||hasUpgrade("f",111)||hasUpgrade("f",251)
 }
 
 // Calculate points/sec!
@@ -85,12 +91,13 @@ function getPointGen() {
 	gain=gain.plus(player.f.adder)
 	gain=gain.times(player.f.multiplier)
 	if(hasAchievement("a",35)) gain=gain.times(1.05)
-
 	gain=gain.pow(player.f.exp)
 	if(player.f.ftype==0) gain=gain.slog()
 	if(player.f.ftype==1) gain=Decimal.log(gain,player.f.y)
 	if(player.f.ftype==2) gain=gain.log10()
+	if(player.f.ftype==3) gain=gain.pow(player.f.k)
 	gain=gain.times(tmp.f.calctmult)
+	gain=gain.pow(tmp.f.calctrueexp)
 	if(hasUpgrade("f",42)) gain=gain.times(upgradeEffect("f",42))
 	if(inChallenge("f",31)) gain=gain.div(player.f.y.pow(((challengeCompletions("f",31)+1)*0.25)))
 	return gain
@@ -106,7 +113,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.f.ftype==3
+	return hasUpgrade("f",291)
 }
 
 
