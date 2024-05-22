@@ -13,13 +13,20 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.8",
-	name: "Pre-dilation",
+	num: "0.9",
+	name: "Dilation",
 }
 
 let changelog = `
-	<h1><b>Current endgame: Reach stage 3.</h1><br><br>
+	<h1><b>Current endgame: Reach stage 4.</h1><br><br>
 	<h1>Changelog:</h1><br><br>
+	<h3>v0.9</h3><br>
+		-Added dilation.<br>
+		-Added 18 upgrades.<br>
+		-Added 3 challenges.<br>
+		-Added 6 buyables.<br>
+		-Fixed some bugs.<br>
+		-Added 10 achievements.<br><br>
 	<h3>v0.8</h3><br>
 		-Added 15 upgrades.<br>
 		-Added 18 studies.<br>
@@ -113,7 +120,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return hasUpgrade("f",291)
+	return player.f.ftype==4
 }
 
 

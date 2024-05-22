@@ -20,12 +20,17 @@ addLayer("f", {
         cmeffect: new Decimal(1),
         funcpower: new Decimal(0),
         cubereq: new Decimal(100),
+        proton: new Decimal(0),
+        neutron: new Decimal(0),
+        ne:new Decimal(0),
         isSacrifice: false,
         totalpower: new Decimal(0),
         challengechecker: new Decimal(0),
         isca:false,
         iscm:false,
         isstud:false,
+        inprotondil:false,
+        inneutrondil:false,
         slog21time: 0,
         log12time: 0,
         log10_21time: 0,
@@ -52,6 +57,32 @@ addLayer("f", {
     },
     row: 0, // Row the layer is in on the tree (0 is the first row)
     layerShown(){return true},
+    microtabs:{
+        dilation:{
+            "upgrades":{
+                content:[
+                    ["upgrades",[30,31,32]]
+                ]
+            },
+            "proton buyables":{
+                content:[
+                    ["buyables",[1,2]]
+                ],
+                unlocked(){return hasUpgrade("f",301)}
+            },
+            "neutron buyables":{
+                content:[
+                    ["buyables",[3,4]]
+                ],
+                unlocked(){return hasUpgrade("f",305)}
+            },
+            "Challenges":{
+                content:[
+                    ["challenges",[9]]
+                ]
+            }
+        }
+    },
     tabFormat: {
         "Slog(x)":{
             content:[
@@ -131,6 +162,24 @@ addLayer("f", {
             ],
             unlocked(){return player.f.ftype==3}
         },
+        "x":{
+            content:[
+                ["display-text",
+                function() { return 'Your point gain is:' },
+                {"font-size":"25px"}],
+                ["display-text",
+                    function() { return player.f.cfunc+"="+format(getPointGen())+"/s" },
+                    { "color": "rgb(65,205,255)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(65,205,255)" }],
+                ["display-text",
+                    function() { return `You have ${format(player.points)} points.`},
+                { "color": "rgb(65,205,255)", "font-size": "50px", "font-family": "Bahnschrift", "text-shadow" : "0 0 15px rgb(65,205,255)" }],
+                "blank",
+                "blank",
+                "blank",
+                ["upgrades",[33]],
+            ],
+            unlocked(){return player.f.ftype==4}
+        },
         "Boosters":{
             content:[
                 ["display-text",
@@ -143,7 +192,7 @@ addLayer("f", {
         }, 
         "Challenges":{
             content:[
-                "challenges"
+                ["challenges",[1,2,3,4,5,6,7,8]]
             ],
             unlocked(){return player.f.challengechecker.gte(1)||hasUpgrade("f",35)}
         },
@@ -158,6 +207,19 @@ addLayer("f", {
             ],
             unlocked(){return hasUpgrade("f",125)||player.f.isstud}
         },
+        "Dilation":{
+            content:[
+                ["display-text",function() { return `You have <h2 style="color:rgb(50,205,50)">${format(player.f.proton)}</h2> proton.`}],
+                ["display-text",function() { return hasUpgrade("f",304) ? `You have <h2 style="color:rgb(50,205,50)">${format(player.f.neutron)}</h2> neutron, which generates <h2 style="color:rgb(50,205,50)">${format(tmp.f.getneps)}</h2> neutron energy per second.` : ``}],
+                ["display-text",function() { return hasUpgrade("f",304) ? `You have <h2 style="color:rgb(50,205,50)">${format(player.f.ne)}</h2> neutron energy, which multiplies points gain by <h2 style="color:rgb(50,205,50)">x${format(tmp.f.getneboost)}</h2>` : ``}],
+                "blank",
+                ["clickables",[4]],
+                "blank",
+                "blank",
+                ["microtabs","dilation"]
+            ],
+            unlocked(){return hasUpgrade("f",291)}
+        }
     },
     update(diff){
         player.f.points=player.points
@@ -168,6 +230,7 @@ addLayer("f", {
         player.f.cmeffect=tmp.f.effofcm.pow(player.f.cmlevel).pow(0.75)
         player.f.k=player.f.kmult.times(tmp.f.calcbasek)
         if (player.devSpeed>1) player.points= new Decimal(0)
+        player.f.ne=player.f.ne.add(tmp.f.getneps.times(diff))
         if(hasUpgrade("f",75)) player.f.isca=true
         if(inChallenge("f",21)) player.f.slog21time+=(4*diff)
         if(inChallenge("f",32)&&player.f.ftype==1) player.f.log12time+=((challengeCompletions("f",32)*8+8)*(diff*5))
@@ -179,6 +242,7 @@ addLayer("f", {
         if(player.f.ftype==1) player.f.cfunc="logᵧ"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")+(inChallenge("f",31)?"/"+format(player.f.y.pow(((challengeCompletions("f",31)+1)*0.25))):"")
         if(player.f.ftype==2) player.f.cfunc="log10"+(player.f.exp.eq(1)?"":"(")+(player.f.multiplier.neq(1)?"(":"")+"(x"+(player.f.adder.eq(0)?")":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+(player.f.exp.eq(1)?"":"^"+(`${format(player.f.exp)}`)+")")+(tmp.f.calctmult.gt(1)?"*"+format(tmp.f.calctmult):"")
         if(player.f.ftype==3) player.f.cfunc=(tmp.f.calctrueexp.neq(1)?"(":"")+(player.f.multiplier.neq(1)?"(":"")+(player.f.adder.neq(0)?"(":"")+"x"+(player.f.adder.eq(0)?"":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")+"^k"+(tmp.f.calctmult.gt(1)?"*"+format(tmp.f.calctmult):"")+(tmp.f.calctrueexp.neq(1)?")^"+format(tmp.f.calctrueexp):"")
+        if(player.f.ftype==4) player.f.cfunc=(player.f.multiplier.neq(1)?"(":"")+(player.f.adder.neq(0)?"(":"")+"x"+(player.f.adder.eq(0)?"":"+"+(`${format(player.f.adder)})`))+(player.f.multiplier.neq(1)?"*"+(`${format(player.f.multiplier)}`)+")":"")
     },
     randTextGen(){
         let s1=String.fromCharCode(Math.floor(Math.random() * 66)+65)
@@ -222,7 +286,7 @@ addLayer("f", {
         if(hasUpgrade("f",252)) add=add.plus(upgradeEffect("f",252))
         if(hasUpgrade("f",261)) add=add.plus(upgradeEffect("f",261))
         if(hasUpgrade("f",174)) add=add.plus(upgradeEffect("f",174))
-            if(hasUpgrade("f",174)) add=add.plus(upgradeEffect("f",174))
+        if(hasUpgrade("f",234)) add=add.plus(upgradeEffect("f",234))
         //LOGY21 DEBUFF
         if(inChallenge("f",41)) add=new Decimal(1)
         //stage 0 *
@@ -242,6 +306,7 @@ addLayer("f", {
         if(hasUpgrade("f",271)) add=add.times(upgradeEffect("f",271))
         //stage 0 ^
         if(hasUpgrade("f",34)) add=add.pow(upgradeEffect("f",34))
+        add=add.times(buyableEffect("f",21))
         //stage 1 ^
         if(hasChallenge("f",41)&&player.f.ftype==1) add=add.pow(1.5)
         //stage 2 ^
@@ -249,13 +314,12 @@ addLayer("f", {
         //stage 3 ^
         if(hasUpgrade("f",284)) add=add.pow(upgradeEffect("f",284))
         if(hasUpgrade("f",242)) add=add.pow(1.075)
+        if(hasUpgrade("f",316)) add=add.pow(1.25)
+        add=add.pow(buyableEffect("f",23))
+        if(player.f.inneutrondil) add=add.pow(0.2)
         return add
     },
     getCube(){
-        if(player.points.gte(player.f.cubereq)) {
-            player.f.funcpower=player.f.funcpower.add(1)
-            player.f.totalpower=player.f.totalpower.add(1)
-        }
         let scal3=new Decimal(1.8)
         let basereq=new Decimal(100)
         let cubediv=new Decimal(1)
@@ -266,10 +330,14 @@ addLayer("f", {
             scal3=new Decimal(2)
         }
         if(hasUpgrade("f",213)) basereq=basereq.pow(0.5)
-        if(hasUpgrade("f",143)) scal3=scal3.minus(upgradeEffect("f",143))
+        if(hasUpgrade("f",143)) scal3=scal3.minus(0.6)
         scal3=scal3.minus(challengeCompletions("f",51)*0.1)
         if(hasUpgrade("f",231)) scal3=scal3.minus(0.075)
         player.f.cubereq=new Decimal(scal3).pow(player.f.totalpower.div(hasUpgrade("f",211)?1.5:1)).times(basereq.minus(hasAchievement("a",85)?1:0)).div(cubediv)
+        if(player.points.gte(player.f.cubereq)&&player.f.cubereq!=undefined&&player.f.cubereq.neq(0)&&player.points!=undefined&&player.points.neq(0)) {
+            player.f.funcpower=player.f.funcpower.add(1)
+            player.f.totalpower=player.f.totalpower.add(1)
+        }
     },
     calctimer(){
         let mult=new Decimal(1)
@@ -311,6 +379,7 @@ addLayer("f", {
         //stage 3 *
         if(hasUpgrade("f",272)) mult=mult.times(upgradeEffect("f",272))
         if(hasUpgrade("f",285)) mult=mult.times(3)
+        mult=mult.times(buyableEffect("f",21))
         //stage 0 ^
         if(hasUpgrade("f",33)) mult=mult.pow(upgradeEffect("f",33))
         if(inChallenge("f",11)) mult=mult.sqrt()
@@ -321,6 +390,8 @@ addLayer("f", {
         //stage 3 ^
         if(hasUpgrade("f",205)) mult=mult.pow(1.075)
         if(inChallenge("f",81)) mult=mult.pow(new Decimal(0.995).pow(player.f.exp21time))
+        mult=mult.pow(buyableEffect("f",41))
+        if(player.f.inneutrondil) mult=mult.pow(0.2)
         return mult
     },
     calctmult(){
@@ -337,6 +408,10 @@ addLayer("f", {
         if(hasUpgrade("f",283)) tmult=tmult.times(upgradeEffect("f",283)) 
         tmult=tmult.times(new Decimal(1.4).pow(challengeCompletions("f",71)))
         if(hasChallenge("f",82)) tmult=tmult.times(2)
+        if(hasUpgrade("f",322)&&player.f.inprotondil) tmult=tmult.times(upgradeEffect("f",322))
+        tmult=tmult.times(buyableEffect("f",12))
+        if(!inChallenge("f",92)) tmult=tmult.times(tmp.f.getneboost)
+        if(inChallenge("f",91)) tmult=tmult.div(1e6)
         if(inChallenge("f",72)) tmult=new Decimal(1)
         return tmult
     },
@@ -379,9 +454,14 @@ addLayer("f", {
         if(hasUpgrade("f",162)) basek=basek.add(0.01)
         if(hasUpgrade("f",222)) basek=basek.add(0.02)
         if(hasAchievement("a",95)) basek=basek.add(0.001)
+        if(hasUpgrade("f",323)) basek=basek.add(0.03)
+        basek=basek.plus(new Decimal(0.008).times(challengeCompletions("f",72)))
+        basek=basek.plus(buyableEffect("f",13))
+        if(hasChallenge("f",91)) basek=basek.add(0.05)
         if(inChallenge("f",72)) basek=new Decimal(0.15).div(challengeCompletions("f",72)*2+1)
         if(inChallenge("f",82)) basek=new Decimal(0.002)
-        basek=basek.plus(new Decimal(0.008).times(challengeCompletions("f",72)))
+        if(inChallenge("f",92)) basek=new Decimal(0.001)
+        if(inChallenge("f",93)) basek=basek.times((Decimal.pow(1.6,player.points.add(1).log10().floor())).min(400))
         return basek
     },
     calcgamma(){
@@ -401,6 +481,14 @@ addLayer("f", {
     calctrueexp(){
         let et=new Decimal(1)
         if(inChallenge("f",71)) et=et.times(new Decimal(1).minus((new Decimal(challengeCompletions("f",71)+1)).times(0.15)))
+        if(hasUpgrade("f",313)) et=et.times(1.1)
+        if(hasUpgrade("f",321)) et=et.times(upgradeEffect("f",321))
+        if(player.f.inprotondil) et=new Decimal(0.1)
+        if(hasUpgrade("f",303)&&player.f.inprotondil) et=et.times(upgradeEffect("f",303))
+        if(hasUpgrade("f",313)&&player.f.inprotondil) et=et.times(1.8)
+        if(hasUpgrade("f",314)&&player.f.inneutrondil) et=et.times(1.5)
+        if(inChallenge("f",91)) et=et.times(0.05)
+        et=et.times(buyableEffect("f",42))
         return et
     },
     chargeadder(){
@@ -409,6 +497,7 @@ addLayer("f", {
         let scal4=new Decimal(18)
         let pow1=new Decimal(1)
         let divcost=new Decimal(1)
+        if(player.f.calevel.eq(75)) player.f.capoints=new Decimal(0)
         if(hasUpgrade("f",255)) divcost=divcost.times(upgradeEffect("f",255))
         if(player.f.ftype==3) pow1=pow1.add(0.2)
         if(hasUpgrade("f",193)) pow1=pow1.minus(0.1)
@@ -419,11 +508,12 @@ addLayer("f", {
         if(hasUpgrade("f",94)) scal1=scal1.minus(upgradeEffect("f",94))
         if(inChallenge("f",31)) scal1=new Decimal(11)
         if(challengeCompletions("f",31)>0&&player.f.ftype==1) scal1=scal1.minus(challengeCompletions("f",31)*0.5)
-        if(progress.gte(1)){
+        if(progress.gte(1)&&player.f.calevel.lt(75)){
             if(inChallenge("f",42)) player.points=new Decimal(0)
             player.f.calevel=player.f.calevel.plus(1)
             player.f.capoints=new Decimal(0)
         }
+
         player.f.careq=scal1.pow(scal4.pow(player.f.calevel.div(inChallenge("f",42)? 6 : 4)).log10().pow(pow1)).times(hasAchievement("a",45) ? 0.97 : 1).plus(inChallenge("f",31) ? 1 : 10).div(divcost)
         return format(progress.times(100))+"%"
     },
@@ -441,13 +531,14 @@ addLayer("f", {
         let scal2=new Decimal(25)
         let pow1=new Decimal(1)
         let divcost=new Decimal(1)
+        if(player.f.cmlevel.eq(60)) player.f.cmpoints=new Decimal(0)
         if(hasUpgrade("f",254)) divcost=divcost.times(upgradeEffect("f",254))
         if(player.f.ftype==3) pow1=pow1.add(0.4)
         if(hasUpgrade("f",94)) scal2=scal2.minus(upgradeEffect("f",94))
         if(hasUpgrade("f",103)) scal2=scal2.minus(3)
         if(hasUpgrade("f",192)) scal2=scal2.minus(8)
         if(hasUpgrade("f",173)) scal2=scal2.minus(6)
-        if(progress.gte(1)){
+        if(progress.gte(1)&&player.f.cmlevel.lt(60)){
             if(inChallenge("f",42)) player.points=new Decimal(0)
             player.f.cmlevel=player.f.cmlevel.plus(1)
             player.f.cmpoints=new Decimal(0)
@@ -463,6 +554,45 @@ addLayer("f", {
         if(hasUpgrade("f",275)) eff2=eff2.plus(upgradeEffect("f",275))
         if(inChallenge("f",42)) eff2=player.f.cmlevel.div(7-(player.f.cmlevel.div(3).min(5))).plus(1.8)
         return eff2
+    },
+    getproton(){
+        let exp1=new Decimal(0.6)
+        if(hasUpgrade("f",311)) exp1=exp1.add(0.4)
+        exp1=exp1.add(buyableEffect("f",22))
+        let protongain=player.points.div(10).add(1).ln().pow(exp1)
+        protongain=protongain.times(buyableEffect("f",11))
+        if(hasUpgrade("f",302)) protongain=protongain.times(upgradeEffect("f",302))
+        if(hasAchievement("a",105)) protongain=protongain.times(1.05)
+        protongain=protongain.pow(buyableEffect("f",33))
+        if(hasChallenge("f",93)) protongain=protongain.pow(1.2)
+        return protongain.minus(player.f.proton).max(0)
+    },
+    getneutron(){
+        let exp2=new Decimal(0.6)
+        if(hasUpgrade("f",314)) exp2=exp2.add(0.2)
+        let neutrongain=player.points.div(25).add(1).log10().pow(exp2)
+        neutrongain=neutrongain.times(buyableEffect("f",31))
+        if(hasChallenge("f",92)) neutrongain=neutrongain.times(3)
+        if(hasUpgrade("f",306)) neutrongain=neutrongain.times(upgradeEffect("f",306))
+        if(hasChallenge("f",93)) neutrongain=neutrongain.pow(1.2)
+        return neutrongain.minus(player.f.neutron).max(0)
+    },
+    getneps(){
+        let exp3=new Decimal(1.8)
+        if(hasUpgrade("f",315)) exp3=exp3.add(0.15)
+        exp3=exp3.add(buyableEffect("f",43))
+        let neps=Decimal.pow(exp3,player.f.neutron.add(1).ln()).minus(1)
+        neps=neps.times(buyableEffect("f",32))
+        if(hasUpgrade("f",325)) neps=neps.pow(1.5)
+        return neps
+    },
+    getneboost(){
+        let exp4=new Decimal(2)
+        if(hasUpgrade("f",324)) exp4=exp4.add(upgradeEffect("f",324))
+        exp4=exp4.add(buyableEffect("f",43))
+        let neboost=player.f.ne.add(1).log10().times(2).pow(exp4).add(1)
+        if(hasChallenge("f",92)) neboost=player.f.ne.add(1).ln().times(exp4).pow(exp4).add(1)
+        return neboost
     },
     upgrades:{
         11:{
@@ -1190,11 +1320,11 @@ addLayer("f", {
         },
         143:{
             title:"21",
-            description(){return "Reduce the cube cost exp. based on points."},
+            description(){return "Reduce the cube cost exp. by 0.6"},
             cost(){return new Decimal(1)},
             currencyDisplayName:"cube",
             unlocked(){ 
-                return (hasUpgrade("f",125)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px",
             "color"(){
@@ -1209,8 +1339,6 @@ addLayer("f", {
             }},
             canAfford(){return player.f.funcpower.gte(1)&&hasUpgrade("f",131)},
             pay(){return player.f.funcpower=player.f.funcpower.minus(1)},
-            effect(){return Decimal.pow(player.points.pow(0.5),1.3).pow(0.6).add(1).div(60).min(0.6)},
-            effectDisplay(){return `-${format(upgradeEffect("f",143))}`},
             branches:[131]
         },
         151:{
@@ -1265,7 +1393,7 @@ addLayer("f", {
             cost(){return new Decimal(1)},
             currencyDisplayName:"cube",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==2
+                return (hasUpgrade("f",125)||player.f.isstud)&&player.f.ftype==2
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(255,180,0)","font-size":"15px","margin-top":"25px","margin-left":"25px",
         "color"(){
@@ -1317,7 +1445,7 @@ addLayer("f", {
             cost(){return new Decimal(2)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",125)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1386,7 +1514,7 @@ addLayer("f", {
             cost(){return new Decimal(2)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1409,7 +1537,7 @@ addLayer("f", {
             cost(){return new Decimal(3)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1457,7 +1585,7 @@ addLayer("f", {
             cost(){return new Decimal(2)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px",
             "color"(){
@@ -1480,7 +1608,7 @@ addLayer("f", {
             cost(){return new Decimal(2)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1505,7 +1633,7 @@ addLayer("f", {
             cost(){return new Decimal(4)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1576,7 +1704,7 @@ addLayer("f", {
             cost(){return new Decimal(4)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1693,7 +1821,7 @@ addLayer("f", {
             cost(){return new Decimal(3)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1739,7 +1867,7 @@ addLayer("f", {
             cost(){return new Decimal(3)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1764,7 +1892,7 @@ addLayer("f", {
             cost(){return new Decimal(6)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1817,7 +1945,7 @@ addLayer("f", {
             cost(){return new Decimal(6)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1840,7 +1968,7 @@ addLayer("f", {
             cost(){return new Decimal(11)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1911,7 +2039,7 @@ addLayer("f", {
             cost(){return new Decimal(25)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1934,7 +2062,7 @@ addLayer("f", {
             cost(){return new Decimal(7)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -1949,7 +2077,7 @@ addLayer("f", {
             }},
             canAfford(){return player.f.funcpower.gte(7)&&hasUpgrade("f",222)},
             pay(){return player.f.funcpower=player.f.funcpower.minus(7)},
-            effect(){return Decimal.pow(4,player.f.funcpower.add(1).ln().pow(1.7).min(2e8))},
+            effect(){return Decimal.pow(4,hasUpgrade("f",312) ? player.f.totalpower : player.f.funcpower.add(1).ln().pow(1.7)).min(2e8)},
             effectDisplay(){return `+${format(upgradeEffect("f",234))}`},      
             branches:[222]
         },
@@ -1982,7 +2110,7 @@ addLayer("f", {
             cost(){return new Decimal(9)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -2005,7 +2133,7 @@ addLayer("f", {
             cost(){return new Decimal(50)},
             currencyDisplayName:"cubes",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(65,255,85)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -2256,7 +2384,7 @@ addLayer("f", {
             cost(){return new Decimal(0)},
             currencyDisplayName:"cube",
             unlocked(){ 
-                return (hasUpgrade("f",285)||player.f.isstud)&&player.f.ftype==3&&hasChallenge("f",82)
+                return (hasUpgrade("f",285)&&player.f.isstud)&&player.f.ftype==3&&hasChallenge("f",82)
             },
             style:{"height":"150px","width":"250px","border":"6px solid","border-color":"rgb(45,205,60)","font-size":"15px","margin-top":"25px","margin-left":"25px",
             "color"(){
@@ -2277,6 +2405,306 @@ addLayer("f", {
             canAfford(){return player.f.funcpower.gte(0)&&hasUpgrade("f",242)&&hasChallenge("f",82)},
             pay(){return player.f.funcpower=player.f.funcpower.minus(0)}, 
             branches:[242]
+        },
+        301:{
+            description(){return `Unlock dilation buyables`},
+            cost(){return new Decimal(2)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",301)&&canAffordUpgrade("f",301)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(2)},
+            pay(){return player.f.proton=player.f.proton.minus(2)}, 
+        },
+        302:{
+            description(){return `Boost proton gain based on proton.`},
+            cost(){return new Decimal(7)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",302)&&canAffordUpgrade("f",302)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(7)},
+            pay(){return player.f.proton=player.f.proton.minus(7)}, 
+            effect(){return player.f.proton.add(1).ln().pow(1.1).add(1).pow(hasUpgrade("f",321)?upgradeEffect("f",321):1)},
+            effectDisplay(){return `x${format(upgradeEffect("f",302))}`},
+        },
+        303:{
+            description(){return `While in proton dilation,point gain is raised to a number based on proton`},
+            cost(){return new Decimal(42)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",303)&&canAffordUpgrade("f",303)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(42)},
+            pay(){return player.f.proton=player.f.proton.minus(42)}, 
+            effect(){return player.f.proton.add(1).log10().add(1).pow(2).ln().pow(0.6).max(1).min(2.5)},
+            effectDisplay(){return `^${format(upgradeEffect("f",303))}`},
+        },
+        304:{
+            description(){return `Unlock neutron dilation.`},
+            cost(){return new Decimal(10000)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px","margin-left":"20px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",304)&&canAffordUpgrade("f",304)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(10000)},
+            pay(){return player.f.proton=player.f.proton.minus(10000)}, 
+        },
+        305:{
+            description(){return `Unlock more dilation buyables.`},
+            cost(){return new Decimal(100)},
+            currencyDisplayName:"NE",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",305)&&canAffordUpgrade("f",305)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.ne.gte(100)},
+            pay(){return player.f.ne=player.f.ne.minus(100)}, 
+        },
+        306:{
+            description(){return `Boost neutron gain base on points.`},
+            cost(){return new Decimal(1500)},
+            currencyDisplayName:"NE",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",306)&&canAffordUpgrade("f",306)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.ne.gte(1500)},
+            pay(){return player.f.ne=player.f.ne.minus(1500)}, 
+            effect(){return player.points.add(1).log10().add(1).pow(0.5)},
+            effectDisplay(){return `x${format(upgradeEffect("f",306))}`},
+        },
+        311:{
+            description(){return `Add 0.4 to proton gain exp.`},
+            cost(){return new Decimal(90)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",311)&&canAffordUpgrade("f",311)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(90)},
+            pay(){return player.f.proton=player.f.proton.minus(90)}, 
+        },
+        312:{
+            description(){return `Study 112's effect is based on total cubes now.`},
+            cost(){return new Decimal(280)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",312)&&canAffordUpgrade("f",312)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(280)},
+            pay(){return player.f.proton=player.f.proton.minus(280)}, 
+        },
+        313:{
+            description(){return `Point gain is raised to ^1.1 in normal game and ^1.8 in proton dilation.`},
+            cost(){return new Decimal(400)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",313)&&canAffordUpgrade("f",313)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(400)},
+            pay(){return player.f.proton=player.f.proton.minus(400)}, 
+        },
+        314:{
+            description(){return `Add 0.2 to neutron gain exp.Point gain in neutron dilation is raised to ^1.5`},
+            cost(){return new Decimal(12000)},
+            currencyDisplayName:"NE",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px","margin-left":"20px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",314)&&canAffordUpgrade("f",314)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.ne.gte(12000)},
+            pay(){return player.f.ne=player.f.ne.minus(12000)}, 
+        },
+        315:{
+            description(){return `Add 0.15 to NE gain exp.`},
+            cost(){return new Decimal(25000)},
+            currencyDisplayName:"NE",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",315)&&canAffordUpgrade("f",315)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.ne.gte(25000)},
+            pay(){return player.f.ne=player.f.ne.minus(25000)}, 
+        },
+        316:{
+            description(){return `The adder of x is raised to ^1.25.`},
+            cost(){return new Decimal(60000)},
+            currencyDisplayName:"NE",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",316)&&canAffordUpgrade("f",316)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.ne.gte(60000)},
+            pay(){return player.f.ne=player.f.ne.minus(60000)}, 
+        },
+        321:{
+            description(){return `Boost point gain and the effect of the second upgrade based on proton.`},
+            cost(){return new Decimal(2500)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",321)&&canAffordUpgrade("f",321)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(2500)},
+            pay(){return player.f.proton=player.f.proton.minus(2500)}, 
+            effect(){return player.f.proton.log10().add(1).pow(0.5).add(1).ln().max(1).min(1.667)},
+            effectDisplay(){return `^${format(upgradeEffect("f",321))}`},
+        },
+        322:{
+            description(){return `Boost point gain in proton dilation based on itself.`},
+            cost(){return new Decimal(6000)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",322)&&canAffordUpgrade("f",322)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(6000)},
+            pay(){return player.f.proton=player.f.proton.minus(6000)}, 
+            effect(){return Decimal.pow(1.5,player.points.add(1).log10())},
+            effectDisplay(){return `x${format(upgradeEffect("f",322))}`},
+        },
+        323:{
+            description(){return `Add 0.03 to base k.`},
+            cost(){return new Decimal(7100)},
+            currencyDisplayName:"proton",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",323)&&canAffordUpgrade("f",323)) b="#0000CC"
+                return b
+            }},
+            canAfford(){return player.f.proton.gte(7100)},
+            pay(){return player.f.proton=player.f.proton.minus(7100)}, 
+        },
+        324:{
+            description(){return `Boost NE boost exp. based on NE`},
+            cost(){return new Decimal(200000)},
+            currencyDisplayName:"NE",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px","margin-left":"20px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",324)&&canAffordUpgrade("f",324)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.ne.gte(200000)},
+            pay(){return player.f.ne=player.f.ne.minus(200000)}, 
+            effect(){return player.f.ne.add(1).log10().div(50).max(0)},
+            effectDisplay(){return `+${format(upgradeEffect("f",324))}`},
+        },
+        325:{
+            description(){return `NE gain is raised to ^1.5 and unlock dilation challenges.`},
+            cost(){return new Decimal(1000000)},
+            currencyDisplayName:"NE",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",325)&&canAffordUpgrade("f",325)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.f.ne.gte(1000000)},
+            pay(){return player.f.ne=player.f.ne.minus(1000000)}, 
+        },
+        326:{
+            description(){return `You can upgrade your function.`},
+            cost(){return new Decimal("1e1500")},
+            currencyDisplayName:"points",
+            unlocked(){ 
+                return hasUpgrade("f",291)
+            },
+            style:{"height":"75px","width":"175px","border":"2px solid","font-size":"15px",
+            "background-color"(){
+                let b=""
+                if(!hasUpgrade("f",326)&&canAffordUpgrade("f",326)) b="#EF1300"
+                return b
+            }},
+            canAfford(){return player.points.gte("1e1500")},
+            pay(){return player.points=player.points.minus("1e1500")}, 
         },
     },
     clickables:{
@@ -2347,6 +2775,16 @@ addLayer("f", {
                     Sacrifice is re-designed.
                     `
                 }
+                if (player.f.ftype==3){
+                    return `Reset all the progress but level up the function by 1.
+                    All upgrades will be removed.
+                    All studies will be removed
+                    The formula of point gain will be x.
+                    Remove dilation buyables and challenges.
+                    Remove exp challenges.
+                    Expand is removed.
+                    `
+                }
             },
             style:{"height":"300px","width":"300px","background-color":"#000000","border-radius":"0%","border-color":"white","border":"6px solid","color":"white","text-shadow":"0 0 15px white","font-size":"15px","font-family":""},
             unlocked(){
@@ -2358,6 +2796,9 @@ addLayer("f", {
                 }
                 if(player.f.ftype==2){
                     return hasUpgrade("f",241)
+                }
+                if(player.f.ftype==3){
+                    return hasUpgrade("f",326)
                 }
             },
             onClick(){
@@ -2378,6 +2819,25 @@ addLayer("f", {
                 player.f.cubereq=new Decimal(100)
                 player.f.challenges[51]=0
                 player.f.challenges[52]=0
+                player.f.challenges[71]=0
+                player.f.challenges[72]=0
+                player.f.challenges[81]=0
+                player.f.challenges[82]=0
+                player.f.challenges[91]=0
+                player.f.challenges[92]=0
+                player.f.challenges[93]=0
+                setBuyableAmount("f",11,new Decimal(0))
+                setBuyableAmount("f",12,new Decimal(0))
+                setBuyableAmount("f",13,new Decimal(0))
+                setBuyableAmount("f",21,new Decimal(0))
+                setBuyableAmount("f",22,new Decimal(0))
+                setBuyableAmount("f",23,new Decimal(0))
+                setBuyableAmount("f",31,new Decimal(0))
+                setBuyableAmount("f",32,new Decimal(0))
+                setBuyableAmount("f",33,new Decimal(0))
+                setBuyableAmount("f",41,new Decimal(0))
+                setBuyableAmount("f",42,new Decimal(0))
+                setBuyableAmount("f",43,new Decimal(0))
             },
             canClick(){return true}
         },
@@ -2385,7 +2845,7 @@ addLayer("f", {
             title(){return "Adder charger"},
             display(){return inChallenge("f",22) ? `Nope.`: `Hold this to charge points into the adder of x.
                             requirement:${format(player.f.careq)}
-                            level:${format(player.f.calevel)}
+                            level:${player.f.calevel}/75
                             effect:x${format(player.f.caeffect)}
                             progress:${tmp.f.chargeadder}
                             (${format(player.f.capoints)}/${format(player.f.careq)})`},
@@ -2401,7 +2861,7 @@ addLayer("f", {
             title(){return "Factor charger"},
             display(){return inChallenge("f",22) ? `Nope.`: `Hold this to charge points into the factor of x.
                             requirement:${format(player.f.cmreq)}
-                            level:${format(player.f.cmlevel)}
+                            level:${player.f.cmlevel}/60
                             effect:x${format(player.f.cmeffect)}
                             progress:${tmp.f.chargefactor}
                             (${format(player.f.cmpoints)}/${format(player.f.cmreq)})`},
@@ -2422,6 +2882,35 @@ addLayer("f", {
                 player.f.funcpower=player.f.totalpower
             },
             canClick(){return player.f.isstud}
+        },
+        41:{
+            display(){return player.f.inprotondil ? (player.f.inneutrondil ? `You need to end neutron dilation first!`:`End proton dilation\nGet ${format(tmp.f.getproton)} proton`) : `Start proton dilation`},
+            tooltip:"Point gain is raised to ^0.1",
+            style:{"height":"155px","width":"255px","background-color"(){return player.f.inprotondil ? "#0000EF25" : "#00000000"},"border-radius":"0%","border":"6px solid","border-color"(){return player.f.inprotondil ? "#0000EF" : "#00ca00"},"color"(){return player.f.inprotondil ? "#0044FF" : "#00ee00"},"font-size":"15px"},
+            unlocked(){return hasUpgrade("f",291)},
+            onClick(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.pow(0)
+                player.points=new Decimal(1)
+                player.f.inprotondil=!player.f.inprotondil
+                if(!player.f.inprotondil) player.f.proton=player.f.proton.add(tmp.f.getproton)
+            },
+            canClick(){return hasUpgrade("f",291)&&!player.f.inneutrondil}
+        },
+        42:{
+            display(){return player.f.inneutrondil ? `End neutron dilation\nGet ${format(tmp.f.getneutron)} neutron` : player.f.inprotondil ? `Start neutron dilation` : "You can only start it in proton dilation!"},
+            tooltip:"The adder and the multiplier of x is raised to ^0.2",
+            style:{"height":"155px","width":"255px","background-color"(){return player.f.inneutrondil ? "#EF000025" : "#00000000"},"border-radius":"0%","border":"6px solid","border-color"(){return player.f.inneutrondil ? "#EF0000" : "#00ca00"},"color"(){return player.f.inneutrondil ? "#FF4400" : "#00ee00"},"font-size":"15px"},
+            unlocked(){return hasUpgrade("f",304)},
+            onClick(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.pow(0)
+                player.points=new Decimal(1)
+                player.f.inneutrondil=!player.f.inneutrondil
+                if(!player.f.inneutrondil) player.f.neutron=player.f.neutron.add(tmp.f.getneutron)
+                player.points=new Decimal(1)
+            },
+            canClick(){return player.f.inprotondil&&hasUpgrade("f",304)}
         },
     },
     challenges:{
@@ -2762,7 +3251,276 @@ addLayer("f", {
                 player.points=new Decimal(1)
             },
         },
+        91:{
+            name() {return`Proton dilation EX`},
+            challengeDescription() {return`Point gain is divided by 1e6,then raised to ^0.05.You can complete it while in proton dilation!`},
+            unlocked(){return hasUpgrade("f",325)&&player.f.ftype==3},
+            goalDescription(){return  `350000 points.`},
+            style:{"border-radius":"2%","border-color":"#0000EF","font-size":"17px","background-color"(){
+                let b=""
+                if(inChallenge("f",91)&&player.f.inprotondil&&!tmp.f.challenges[91].canComplete) b="#2525EF25"
+                return b
+            },"color"(){
+                let c=""
+                if(inChallenge("f",91)&&player.f.inprotondil&&!tmp.f.challenges[91].canComplete) c="#2525EF"
+                return c
+            }},
+            rewardDescription:"Add 0.05 to base k,the second proton buyable won't reduce proton anymore",
+            canComplete(){return player.points.gte(350000)&&player.f.inprotondil },
+            marked(){return hasChallenge("f",91)},
+            onEnter(){
+                player.points=new Decimal(1)
+            },            
+            onExit(){
+                player.points=new Decimal(1)
+            },            
+            onComplete(){
+                player.points=new Decimal(1)
+            },
+        },
+        92:{
+            name() {return`Neutron dilation EX`},
+            challengeDescription() {return`NE doesn't have any effect and base k is always 0.001.You can complete it while in neutron dilation!`},
+            unlocked(){return hasChallenge("f",91)&&player.f.ftype==3},
+            goalDescription(){return  `5e41 points.`},
+            style:{"border-radius":"2%","border-color":"#EF0000","font-size":"17px","background-color"(){
+                let b=""
+                if(inChallenge("f",92)&&player.f.inneutrondil&&!tmp.f.challenges[92].canComplete) b="#EF252525"
+                return b
+            },"color"(){
+                let c=""
+                if(inChallenge("f",92)&&player.f.inneutrondil&&!tmp.f.challenges[92].canComplete) c="#EF2525"
+                return c
+            }},
+            rewardDescription:"Improve NE boost formula and triple neutron gain.",
+            canComplete(){return player.points.gte(5e41)&&player.f.inneutrondil},
+            marked(){return hasChallenge("f",92)},
+            onEnter(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.times(0)
+                player.points=new Decimal(1)
+            },            
+            onExit(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.pow(0)
+                player.points=new Decimal(1)
+            },            
+            onComplete(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.pow(0)
+                player.points=new Decimal(1)
+            },
+        },
+        93:{
+            name() {return`exp final`},
+            challengeDescription() {return`Run two other dilation challenges but you can complete this in normal game.1.6x base k for each Oom of points and capped at 400x.<br>Now: x${format(Decimal.pow(1.6,player.points.add(1).log10().floor()).min(400))}`},
+            unlocked(){return hasChallenge("f",92)&&player.f.ftype==3},
+            goalDescription(){return  `1e45 points.`},
+            style:{"border-radius":"2%","font-size":"17px"},
+            rewardDescription:"Neutron and proton gain is raised to ^1.2.",
+            canComplete(){return player.points.gte(1e45)},
+            marked(){return hasChallenge("f",93)},
+            onEnter(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.times(0)
+                player.points=new Decimal(1)
+            },            
+            onExit(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.times(0)
+                player.points=new Decimal(1)
+            },            
+            onComplete(){
+                player.f.adder=player.f.adder.pow(0)
+                player.f.multiplier=player.f.multiplier.times(0)
+                player.points=new Decimal(1)
+            },
+
+            countsAs:[91,92]
+        },
     },
+    buyables:{
+        11:{
+            cost(x) { return Decimal.pow(2,x.add(1).pow(2))},
+            effect(x) { return new Decimal(2).pow(x) },
+            display() { return `Double proton gain.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("f",11))}
+                                Effect: x${format(this.effect())}` },
+            canAfford() { return player.f.proton.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[11].canAfford) return
+                player.f.proton = player.f.proton.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[11].canAfford? "#0000CC":"#00EF00"},"color"(){return tmp.f.buyables[11].canAfford? "#2545EF":"#00EF00"},"background-color"(){return tmp.f.buyables[11].canAfford? "#0000EF20":"#00000000"},"font-size":"17px"}
+        },
+        12:{
+            cost(x) { return Decimal.pow(x.add(1).pow(2),2)},
+            effect(x) { return new Decimal(2).pow(x) },
+            display() { return `Double point gain.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("f",12))}
+                                Effect: x${format(this.effect())}` },
+            canAfford() { return player.f.proton.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[12].canAfford) return
+                if(!hasChallenge("f",91)) player.f.proton = player.f.proton.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[12].canAfford? "#0000CC":"#00EF00"},"color"(){return tmp.f.buyables[12].canAfford? "#2545EF":"#00EF00"},"background-color"(){return tmp.f.buyables[12].canAfford? "#0000EF20":"#00000000"},"font-size":"17px"}
+        },
+        13:{
+            cost(x) { return Decimal.pow(5,x.add(1).pow(2))},
+            effect(x) { return new Decimal(0.01).times(x)},
+            display() { return `Add 0.01 to base k.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("f",13))}
+                                Effect: +${format(this.effect())}` },
+            canAfford() { return player.f.proton.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[13].canAfford) return
+                player.f.proton = player.f.proton.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[13].canAfford? "#0000CC":"#00EF00"},"color"(){return tmp.f.buyables[13].canAfford? "#2545EF":"#00EF00"},"background-color"(){return tmp.f.buyables[13].canAfford? "#0000EF20":"#00000000"},"font-size":"17px"}
+        },
+        21:{
+            cost(x) { return Decimal.pow(1.7,x.add(1)).times(100)},
+            effect(x) { return new Decimal(5).pow(x)},
+            display() { return `Multiply the adder and the multiplier of x by 5.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("f",21))}
+                                Effect: x${format(this.effect())}` },
+            canAfford() { return player.f.proton.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[21].canAfford) return
+                player.f.proton = player.f.proton.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[21].canAfford? "#0000CC":"#00EF00"},"color"(){return tmp.f.buyables[21].canAfford? "#2545EF":"#00EF00"},"background-color"(){return tmp.f.buyables[21].canAfford? "#0000EF20":"#00000000"},"font-size":"17px"}
+        },
+        22:{
+            cost(x) { return Decimal.pow(5,x).pow(1.75).times(300)},
+            effect(x) { return new Decimal(0.05).times(x)},
+            display() { return `Add 0.05 to proton gain exp.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("f",22))}
+                                Effect: +${format(this.effect())}` },
+            canAfford() { return player.f.proton.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[22].canAfford) return
+                player.f.proton = player.f.proton.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[22].canAfford? "#0000CC":"#00EF00"},"color"(){return tmp.f.buyables[22].canAfford? "#2545EF":"#00EF00"},"background-color"(){return tmp.f.buyables[22].canAfford? "#0000EF20":"#00000000"},"font-size":"17px"}
+        },
+        23:{
+            cost(x) { return Decimal.pow(5,x.pow(3)).pow(0.7).times(1500)},
+            effect(x) { return new Decimal(1.1).pow(x)},
+            display() { return `The adder of x is raised to ^1.1.
+                                Cost: ${format(this.cost())}
+                                Amount: ${format(getBuyableAmount("f",23))}
+                                Effect: ^${format(this.effect())}` },
+            canAfford() { return player.f.proton.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[23].canAfford) return
+                player.f.proton = player.f.proton.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[23].canAfford? "#0000CC":"#00EF00"},"color"(){return tmp.f.buyables[23].canAfford? "#2545EF":"#00EF00"},"background-color"(){return tmp.f.buyables[23].canAfford? "#0000EF20":"#00000000"},"font-size":"17px"}
+        },
+        31:{
+            cost(x) { return Decimal.pow(2,x.add(1).pow(2)).times(20).pow(1.25)},
+            effect(x) { return new Decimal(3).pow(x)},
+            display() { return `Triple neutron gain.
+                                Cost: ${format(this.cost())} NE
+                                Amount: ${format(getBuyableAmount("f",31))}
+                                Effect: x${format(this.effect())}` },
+            canAfford() { return player.f.ne.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[31].canAfford) return
+                player.f.ne = player.f.ne.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[31].canAfford? "#DD0000":"#00EF00"},"color"(){return tmp.f.buyables[31].canAfford? "#EF4525":"#00EF00"},"background-color"(){return tmp.f.buyables[31].canAfford? "#EF000020":"#00000000"},"font-size":"17px"}
+        },
+        32:{
+            cost(x) { return Decimal.pow(4,x).times(250)},
+            effect(x) { return new Decimal(1.5).pow(x)},
+            display() { return `1.5x NE gain.
+                                Cost: ${format(this.cost())} NE
+                                Amount: ${format(getBuyableAmount("f",31))}
+                                Effect: x${format(this.effect())}` },
+            canAfford() { return player.f.ne.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[32].canAfford) return
+                player.f.ne = player.f.ne.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[32].canAfford? "#DD0000":"#00EF00"},"color"(){return tmp.f.buyables[32].canAfford? "#EF4525":"#00EF00"},"background-color"(){return tmp.f.buyables[32].canAfford? "#EF000020":"#00000000"},"font-size":"17px"}
+        },
+        33:{
+            cost(x) { return Decimal.pow(2,new Decimal(2).pow(Decimal.pow(1.8,x))).times(200)},
+            effect(x) { return new Decimal(1.075).pow(x)},
+            display() { return `Proton gain is raised to ^1.075.
+                                Cost: ${format(this.cost())} NE
+                                Amount: ${format(getBuyableAmount("f",33))}
+                                Effect: ^${format(this.effect())}` },
+            canAfford() { return player.f.ne.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[33].canAfford) return
+                player.f.ne = player.f.ne.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[33].canAfford? "#DD0000":"#00EF00"},"color"(){return tmp.f.buyables[33].canAfford? "#EF4525":"#00EF00"},"background-color"(){return tmp.f.buyables[33].canAfford? "#EF000020":"#00000000"},"font-size":"17px"}
+        },
+        41:{
+            cost(x) { return Decimal.pow(4,new Decimal(2).pow(x.add(1).pow(0.5))).times(1100)},
+            effect(x) { return getBuyableAmount("f",41).gte(10) ? new Decimal(1.04).pow(x.minus(10)).add(new Decimal(1.1).pow(10)):new Decimal(1.1).pow(x)},
+            display() { return `The multiplier of x is raised to ^1.1.
+                                Cost: ${format(this.cost())} NE
+                                Amount: ${format(getBuyableAmount("f",41))}
+                                Effect: ^${format(this.effect())}`+ (getBuyableAmount("f",41).gte(10) ? `(Softcapped)` : ``)},
+            canAfford() { return player.f.ne.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[41].canAfford) return
+                player.f.ne = player.f.ne.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[41].canAfford? "#DD0000":"#00EF00"},"color"(){return tmp.f.buyables[41].canAfford? "#EF4525":"#00EF00"},"background-color"(){return tmp.f.buyables[41].canAfford? "#EF000020":"#00000000"},"font-size":"17px"}
+        },
+        42:{
+            cost(x) { return Decimal.pow(2,x.add(1).pow(2.5)).times(12500)},
+            effect(x) { return new Decimal(1.1).pow(x)},
+            display() { return `Point gain is raised to ^1.1.
+                                Cost: ${format(this.cost())} NE
+                                Amount: ${format(getBuyableAmount("f",42))}
+                                Effect: ^${format(this.effect())}` },
+            canAfford() { return player.f.ne.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[42].canAfford) return
+                player.f.ne = player.f.ne.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[42].canAfford? "#DD0000":"#00EF00"},"color"(){return tmp.f.buyables[42].canAfford? "#EF4525":"#00EF00"},"background-color"(){return tmp.f.buyables[42].canAfford? "#EF000020":"#00000000"},"font-size":"17px"}
+        },
+        43:{
+            cost(x) { return Decimal.pow(2.5,x.times(2).pow(1.55)).times(250000)},
+            effect(x) { return new Decimal(0.08).times(x)},
+            display() { return `Add 0.08 to NE gain and boost exp.
+                                Cost: ${format(this.cost())} NE
+                                Amount: ${format(getBuyableAmount("f",43))}
+                                Effect: +${format(this.effect())}` },
+            canAfford() { return player.f.ne.gte(this.cost()) },
+            buy(){
+                if(!tmp.f.buyables[43].canAfford) return
+                player.f.ne = player.f.ne.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style:{"height":"250px","width":"250px","margin":"25px","border":"6px solid","border-radius":"0%","border-color"(){return tmp.f.buyables[43].canAfford? "#DD0000":"#00EF00"},"color"(){return tmp.f.buyables[43].canAfford? "#EF4525":"#00EF00"},"background-color"(){return tmp.f.buyables[43].canAfford? "#EF000020":"#00000000"},"font-size":"17px"}
+        },
+    }
 }),
 addLayer("a", {
     startData() { return {
@@ -3047,7 +3805,7 @@ addLayer("a", {
         92: {
             name: "Oh no I can't get RQ==!",
             style:{"border-radius":"0%"},
-            done() {return tmp.f.calckmult.gt(1)},
+            done() {return player.f.kmult.gt(1)},
             tooltip: "Do a expanding.\nreward:Get RQ==.",
         }, 
         93: {
@@ -3066,8 +3824,70 @@ addLayer("a", {
             name: "Qw==.",
             style:{"border-radius":"0%","border-color":"green"},
             done() {return !hasUpgrade("f",241)&&player.points.gte(400000)},
-            tooltip(){ return (hasAchievement("a",85) ? `Reach expand hardcap.` : `UmVhY2ggZXhwYW5kIGhhcmRjYXAu.`)+
+            tooltip(){ return (hasAchievement("a",95) ? `Reach expand hardcap.` : `UmVhY2ggZXhwYW5kIGhhcmRjYXAu.`)+
             `\nreward: Add 0.001 to base k`},
+        },
+        101: {
+            name: "I've been charged",
+            style:{"border-radius":"0%"},
+            done() {return player.f.calevel.gte(30)&&player.f.ftype==3},
+            tooltip: "Charger your adder to level 30 in stage 3.",
+        },
+        102: {
+            name: "Reduce by reduce",
+            style:{"border-radius":"0%"},
+            done() {return challengeCompletions("f",71)>=5},
+            tooltip: "Complete exp11 for 5 times.",
+        },
+        103: {
+            name: "1 TICK RACE",
+            style:{"border-radius":"0%"},
+            done() {return hasChallenge("f",82)},
+            tooltip: "Complete exp22.",
+        },
+        104: {
+            name: "Time dilated",
+            style:{"border-radius":"0%"},
+            done() {return hasUpgrade("f",291 )},
+            tooltip: "Unlock dilation.",
+        },
+        105: {
+            name: "Tw==.",
+            style:{"border-radius":"0%","border-color":"green"},
+            done() {return !hasUpgrade("f",241)&&player.points.gte(400000)},
+            tooltip(){ return (hasAchievement("a",105) ? `Get 100 proton without buying studies.` : `R2V0IDEwMCBwcm90b24gd2l0aG9\n1dCBidXlpbmcgc3R1ZGllcy4=`)+
+            `\nreward: 1.05x proton gain.`},
+        },
+        111: {
+            name: "1e15 is too much",
+            style:{"border-radius":"0%"},
+            done() {return player.f.points.gte(1e15)&&player.f.inprotondil},
+            tooltip: "Get 1e15 points in proton dilation.",
+        },
+        112: {
+            name: "Neutron energy",
+            style:{"border-radius":"0%"},
+            done() {return player.f.ne.gt(0)},
+            tooltip: "Start to generate NE.",
+        },
+        113: {
+            name: "When did we get there?",
+            style:{"border-radius":"0%"},
+            done() {return getPointGen().gte("1.8e308")},
+            tooltip: "Earn 1.8e308 points per second.",
+        },
+        114: {
+            name: "Final is not final",
+            style:{"border-radius":"0%"},
+            done() {return hasChallenge("f",93)},
+            tooltip: "Complete exp final.",
+        },
+        115: {
+            name: "RA==.",
+            style:{"border-radius":"0%","border-color":"green"},
+            done() {return player.points.gte("1e2000")},
+            tooltip(){ return (hasAchievement("a",115) ? `Get 1e2000 points.` : `R2V0IDFlMjAwMCBwb2ludHM=`)+
+            `\nreward: 1.05x proton gain.`},
         },
         update(diff) {	// Added this section to call adjustNotificationTime every tick, to reduce notification timers
             adjustNotificationTime(diff);
@@ -3075,7 +3895,7 @@ addLayer("a", {
     },
     tabFormat: [
         "blank", 
-        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/46" }], 
+        ["display-text", function() { return"Achievements:"+player.a.achievements.length+"/55" }], 
         ["display-text", function() { return`Achievements on the last column are challenging, complete them to get a bonus!(Maybe you can do them later)` }], 
         "blank", "blank","blank","blank",
         "achievements",
