@@ -73,3 +73,7 @@ function achievementEffect(layer, id) {
 function gridEffect(layer, id) {
 	return (gridRun(layer, 'getEffect', player[layer].grid[id], id))
 }
+
+function checkDecimalNaN(x){
+	return x instanceof Decimal && x.neq(x)
+}
