@@ -3323,6 +3323,15 @@ addLayer("f", {
                     player.f.proton=new Decimal(0)
                     player.f.neutron=new Decimal(0)
                     player.f.ne=new Decimal(0)
+                    player.f.challenges[11]=0
+                    player.f.challenges[12]=0
+                    player.f.challenges[21]=0
+                    player.f.challenges[22]=0
+                    player.f.challenges[31]=0
+                    player.f.challenges[32]=0
+                    player.f.challenges[41]=0
+                    player.f.challenges[42]=0
+                    player.f.challenges[61]=0
                     player.f.challenges[51]=0
                     player.f.challenges[52]=0
                     player.f.challenges[71]=0
@@ -8485,7 +8494,7 @@ addLayer("a", {
         135: {
             name: "SQ==.",
             style:{"border-radius":"0%","border-color":"rgb(65,205,225)"},
-            done() {return player.p.points.gte(1e52)&&player.hp.points.eq(0)&&player.f.ftype==4},
+            done() {return player.points.gte(1e52)&&player.hp.points.eq(0)&&player.f.ftype==4},
             tooltip(){ return `Get 1e52 points with 0 HP.<br>reward:5x SP gain.`},
         },
         141: {
